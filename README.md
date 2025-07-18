@@ -34,3 +34,17 @@ If you now needed to start using the `start-server` script, you should do someth
    In this case, we need to add `--save-dev` at the end, something like this: `npm install nodemon --save-dev`. This way the npm can know which of these packages is for production 🚀
    If we installed it as `npm install nodemon --save`, it would install it as a production package.
    If we installed it as `npm install nodemon -g`, it would install it globally.
+
+6. If we want to start using nodemon, we can change the `start` script in the `package.json` file to use it:
+
+```json
+"scripts": {
+    "start": "nodemon app.js"
+}
+```
+
+7. To use the debugger with nodemon, you can do the following:
+
+   ![setting debugger options](/images/1.set%20debugger%20options.png)
+
+   We need to go to `Run` > `Add Configuration...`
