@@ -48,3 +48,18 @@ If you now needed to start using the `start-server` script, you should do someth
    ![setting debugger options](/images/1.set%20debugger%20options.png)
 
    We need to go to `Run` > `Add Configuration...`
+   Then, the file `launch.json` will be created, there you'll need to add the following options inside the `configurations` array:
+
+   ```json
+    "restart": true,
+    "runtimeExecutable": "nodemon",
+    "console": "integratedTerminal"
+   ```
+
+   This will enable the VS Code to restart the server, using nodemon.
+   NOTE: There could be an error that it fails. This is due to nodemon not being installed globally, so we need to install it like this: `npm install nodemon -g`
+   We also added the option `console` to the options so we could have the loggs in the integrated terminal off VS Code.
+
+## Section 5 - Working with Express.js
+
+To install Express, we just need to run the command `npm install --save express`. We use the `--save` because this will be on production 🚀
