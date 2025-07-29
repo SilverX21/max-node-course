@@ -62,4 +62,6 @@ If you now needed to start using the `start-server` script, you should do someth
 
 ## Section 5 - Working with Express.js
 
-To install Express, we just need to run the command `npm install --save express`. We use the `--save` because this will be on production 🚀
+8. To install Express, we just need to run the command `npm install --save express`. We use the `--save` because this will be on production 🚀
+9. Let's also install the body-parser package to parse requests from the front end: `npm install --save body-parser`
+10.

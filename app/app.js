@@ -1,26 +1,28 @@
-const http = require("http");
-
-//here we import the express module
 const express = require("express");
+const bodyParser = require("body-parser");
 
-//here we create an instance of express
-//this instance will be used to create the server and handle requests
 const app = express();
 
-//use is used to add some middleware to the express app
-app.use((req, res, next) => {
-  console.log("In the middleware!");
-  next(); //this will call the next middleware in the stack
+// This middleware is used to parse incoming request bodies
+//this won't parse everything, but it will parse the body of a POST request like in froms
+app.use(bodyParser.urlencoded({ extended: false }));
+
+//This request will handle POST requests to the /add-product path
+app.use("/add-product", (req, res, next) => {
+  res.send(
+    '<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Productnd</button></form>'
+  );
 });
 
-app.use((req, res, next) => {
-  console.log("In another middleware!");
+//This request will handle POST requests to the /product path
+app.post("/product", (req, res, next) => {
+  //the redirect will send the user to a given path
+  console.log(req.body);
+  res.redirect("/");
+});
 
-  //this will send a response to the client
-  //as you can see, here we don't use the next() function because the res.send() will end the request-response cycle
+app.use("/", (req, res, next) => {
   res.send("<h1>Hello from Express!</h1>");
 });
 
-const server = http.createServer(app);
-
-server.listen(3000);
+app.listen(3000);
