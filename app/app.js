@@ -1,28 +1,28 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const path = require("path");
+
+const adminRoutes = require("./routes/admin");
+const shopRoutes = require("./routes/shop");
 
 const app = express();
 
-// This middleware is used to parse incoming request bodies
-//this won't parse everything, but it will parse the body of a POST request like in froms
 app.use(bodyParser.urlencoded({ extended: false }));
+// here we serve static files from the public folder
+// this allows us to serve CSS files, images, etc. from the public folder, so that we can use them in our HTML files
+app.use(express.static(path.join(__dirname, "public")));
 
-//This request will handle POST requests to the /add-product path
-app.use("/add-product", (req, res, next) => {
-  res.send(
-    '<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Productnd</button></form>'
-  );
-});
+//here we mount the admin routes
+//so that they can handle requests to /admin/add-product and /admin/product
+//the admin routes will be prefixed with /admin with the first argument
+app.use("/admin", adminRoutes);
+//here we mount the shop routes
+app.use(shopRoutes);
 
-//This request will handle POST requests to the /product path
-app.post("/product", (req, res, next) => {
-  //the redirect will send the user to a given path
-  console.log(req.body);
-  res.redirect("/");
-});
-
-app.use("/", (req, res, next) => {
-  res.send("<h1>Hello from Express!</h1>");
+//here we handle requests that do not match any of the above routes
+//this should be the last middleware in the stack
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
 });
 
 app.listen(3000);
