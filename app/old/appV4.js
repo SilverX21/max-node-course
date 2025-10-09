@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 
-const adminData = require("./routes/admin");
+const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //here we mount the admin routes
 //so that they can handle requests to /admin/add-product and /admin/product
 //the admin routes will be prefixed with /admin with the first argument
-app.use("/admin", adminData.routes); //we are using .routes because we exported an object with routes and products
+app.use("/admin", adminRoutes);
 //here we mount the shop routes
 app.use(shopRoutes);
 

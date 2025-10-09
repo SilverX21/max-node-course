@@ -6,19 +6,15 @@ const rootDir = require("../util/path");
 //and will be mounted in app.js
 const router = express.Router();
 
-//this array will hold the products added via the form
-const products = [];
-
 router.get("/add-product", (req, res, next) => {
   console.log("the value of __dirname inside the admin.js: ", __dirname);
   res.sendFile(path.join(rootDir, "views", "add-product.html"));
 });
 
 router.post("/add-product", (req, res, next) => {
-  products.push({ title: req.body.title });
+  console.log(req.body);
 
   res.redirect("/");
 });
 
 exports.routes = router;
-exports.products = products;
