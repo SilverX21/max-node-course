@@ -64,4 +64,8 @@ If you now needed to start using the `start-server` script, you should do someth
 
 8. To install Express, we just need to run the command `npm install --save express`. We use the `--save` because this will be on production 🚀
 9. Let's also install the body-parser package to parse requests from the front end: `npm install --save body-parser`
-10.
+
+## Section 6 - Working with dynamic content & adding templating engines
+
+10. let's install the folllwing: `npm install --save ejs pug express-handlebars`
+    Here we have some of the templates for dynamic content using html 💪

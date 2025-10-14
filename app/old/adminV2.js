@@ -10,10 +10,8 @@ const router = express.Router();
 const products = [];
 
 router.get("/add-product", (req, res, next) => {
-  // console.log("the value of __dirname inside the admin.js: ", __dirname);
-  // res.sendFile(path.join(rootDir, "views", "add-product.html"));
-
-  res.render("add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
+  console.log("the value of __dirname inside the admin.js: ", __dirname);
+  res.sendFile(path.join(rootDir, "views", "add-product.html"));
 });
 
 router.post("/add-product", (req, res, next) => {
