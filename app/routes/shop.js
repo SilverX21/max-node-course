@@ -1,6 +1,6 @@
 const express = require("express");
-const path = require("path");
-const rootDir = require("../util/path");
+// const path = require("path");
+// const rootDir = require("../util/path");
 
 const adminData = require("./admin");
 
@@ -16,7 +16,15 @@ router.get("/", (req, res, next) => {
   //it already knows to look in the views folder because we set it in app.js
   //given we are using pug, we do not need to provide the full file name, just the name without extension
   //we are passing an object with the products array to the template
-  res.render("shop", { prods: products, pageTitle: "Shop", path: "/" });
+  //in handleabars, we cannot directly check for length, so we create a new variable hasProducts
+  res.render("shop", {
+    prods: products,
+    pageTitle: "Shop",
+    path: "/",
+    hasProducts: products.length > 0,
+    activeShop: true,
+    productCSS: true,
+  });
 });
 
 module.exports = router;

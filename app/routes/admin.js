@@ -1,6 +1,6 @@
 const express = require("express");
-const path = require("path");
-const rootDir = require("../util/path");
+// const path = require("path");
+// const rootDir = require("../util/path");
 
 //router will handle requests to /admin/add-product and /admin/product
 //and will be mounted in app.js
@@ -13,7 +13,13 @@ router.get("/add-product", (req, res, next) => {
   // console.log("the value of __dirname inside the admin.js: ", __dirname);
   // res.sendFile(path.join(rootDir, "views", "add-product.html"));
 
-  res.render("add-product", { pageTitle: "Add Product", path: "/admin/add-product" });
+  res.render("add-product", {
+    pageTitle: "Add Product",
+    path: "/admin/add-product",
+    formCSS: true,
+    productCSS: true,
+    activeAddProduct: true,
+  });
 });
 
 router.post("/add-product", (req, res, next) => {
