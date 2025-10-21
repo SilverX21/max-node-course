@@ -2,8 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 
-const adminData = require("./routes/admin");
+const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const errorController = require("./controllers/error");
 
 const app = express();
 
@@ -13,12 +14,11 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/admin", adminData.routes);
+//here we change to use the admin routes for any route that starts with /admin
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
-app.use((req, res, next) => {
-  res.status(404).render("404", { pageTitle: "Page Not Found", path: req.url });
-});
+app.use(errorController.get404);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
