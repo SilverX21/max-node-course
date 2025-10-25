@@ -9,6 +9,6 @@ router.get("/add-product", adminController.getAddProduct);
 router.post("/add-product", adminController.postAddProduct);
 
 //dont't forget this starts with /admin because of how we set it up in app.js
-router.get("/products");
+router.get("/products", adminController.getProducts);
 
 module.exports = router;
