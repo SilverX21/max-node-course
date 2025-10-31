@@ -1,1 +1,23 @@
-[{"title":"Test Book 1","imageUrl":"https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png","description":"This is the Test Book 1, the first of the series!","price":"20.45"},{"title":"Test Book 2","imageUrl":"https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png","description":"This is the second of the series, don't miss it!","price":"21.99"}]
+[
+  {
+    "id": "1",
+    "title": "Test Book 1",
+    "imageUrl": "https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png",
+    "description": "This is the Test Book 1, the first of the series!",
+    "price": "20.45"
+  },
+  {
+    "id": "2",
+    "title": "Test Book 2",
+    "imageUrl": "https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png",
+    "description": "This is the second of the series, don't miss it!",
+    "price": "21.99"
+  },
+  {
+    "title": "Another product",
+    "imageUrl": "https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png",
+    "description": "This is to test my ids!",
+    "price": "12.34",
+    "id": "0.23535028836170058"
+  }
+]

@@ -28,6 +28,7 @@ module.exports = class Product {
   }
 
   save() {
+    this.id = Math.random().toString(); //we generate a random id for the product
     getProductsFromFile((products) => {
       //for the "this" to refer to the current, we must use an arrow function
       products.push(this); //we add the new product to the array
@@ -43,5 +44,13 @@ module.exports = class Product {
   //we added a callback to handle the async nature of the readFile method, this will allow us to get the products when they are ready
   static fetchAll(cb) {
     getProductsFromFile(cb);
+  }
+
+  static findById(id, cb) {
+    //here we get a single product by its id
+    getProductsFromFile((products) => {
+      const product = products.find((p) => p.id === id);
+      cb(product); //we call the callback with the found product
+    });
   }
 };
