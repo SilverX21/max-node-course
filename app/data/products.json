@@ -1,23 +1,16 @@
 [
   {
-    "id": "1",
-    "title": "Test Book 1",
+    "title": "Nice book",
     "imageUrl": "https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png",
-    "description": "This is the Test Book 1, the first of the series!",
-    "price": "20.45"
+    "description": "A nice book that someone got for a good price!",
+    "price": "12.99",
+    "id": "0.11366418402876721"
   },
   {
-    "id": "2",
-    "title": "Test Book 2",
-    "imageUrl": "https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png",
-    "description": "This is the second of the series, don't miss it!",
-    "price": "21.99"
-  },
-  {
-    "title": "Another product",
-    "imageUrl": "https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png",
-    "description": "This is to test my ids!",
-    "price": "12.34",
-    "id": "0.23535028836170058"
+    "title": "Charizard",
+    "imageUrl": "https://www.google.com/imgres?q=pokemon%20card&imgurl=https%3A%2F%2Frelentlessdragon.com%2Fwp-content%2Fuploads%2F2019%2F10%2FCharizard-Legendary-Collection3.jpg&imgrefurl=https%3A%2F%2Frelentlessdragon.com%2Fpokemon-card-game%2Fidentifying-early-pokemon-cards%2F&docid=KB5_k9p00LJcSM&tbnid=V4fn9Gbz85MkEM&vet=12ahUKEwjoy8q12tmQAxW-QvEDHRzULDsQM3oECBYQAA..i&w=322&h=445&hcb=2&ved=2ahUKEwjoy8q12tmQAxW-QvEDHRzULDsQM3oECBYQAA",
+    "description": "The rarest pokémon card out there!",
+    "price": "6000000",
+    "id": "0.6865168467077462"
   }
 ]
