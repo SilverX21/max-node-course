@@ -2,12 +2,10 @@ const Product = require("../models/product");
 
 //here we are exporting a function that will handle the request to get the add product page
 exports.getAddProduct = (req, res, next) => {
-  res.render("admin/add-product", {
+  res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    formCSS: true,
-    productCSS: true,
-    activeAddProduct: true,
+    editing: false,
   });
 };
 
@@ -22,6 +20,31 @@ exports.postAddProduct = (req, res, next) => {
   product.save();
 
   res.redirect("/");
+};
+
+exports.getEditProduct = (req, res, next) => {
+  //we can access the query parameters using req.query
+  //if we want to get a specific parameter, access like this: req.query.<paramName>
+  //Important: the extracted value is always a string. So "true" instead of true
+  const editMode = req.query.edit === "true";
+  console.log("Is edit mode: ", editMode);
+
+  if (!editMode) {
+    //here we redirect to other place if edit mode is not enabled
+    return res.redirect("/");
+  }
+
+  const prodId = req.params.productId;
+  Product.findById(prodId, (product) => {
+    if (!product) return res.redirect("/");
+
+    res.render("admin/edit-product", {
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+      editing: editMode,
+      product: product,
+    });
+  });
 };
 
 exports.getProducts = (req, res, next) => {
