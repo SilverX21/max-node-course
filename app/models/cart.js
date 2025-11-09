@@ -40,4 +40,43 @@ module.exports = class Cart {
       });
     });
   }
+
+  static deleteProduct(id, productPrice) {
+    fs.readFile(p, (err, fileContent) => {
+      if (err) {
+        return;
+      }
+
+      const updatedCart = { ...JSON.parse(fileContent) };
+      const product = updatedCart.products.find((prod) => prod.id === id);
+
+      //here we check if the product exists in the cart
+      if (!product) {
+        return;
+      }
+
+      const productQty = product.qty;
+      updatedCart.products = updatedCart.products.filter(
+        (prod) => prod.id !== id
+      );
+      //we need to get the quantity and multiply the price of the product (this will give us the total of that product quantity) then we substract it from the total price
+      updatedCart.totalPrice =
+        updatedCart.totalPrice - productPrice * productQty;
+
+      fs.writeFile(p, JSON.stringify(updatedCart), (err) => {
+        console.log(err);
+      });
+    });
+  }
+
+  static getCart(cb) {
+    fs.readFile(p, (err, fileContent) => {
+      const cart = JSON.parse(fileContent);
+      if (err) {
+        cb(null);
+      } else {
+        cb(cart);
+      }
+    });
+  }
 };

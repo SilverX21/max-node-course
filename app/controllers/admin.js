@@ -16,7 +16,7 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
 
   //here we use the Product model to create a new product and save it
-  const product = new Product(title, imageUrl, description, price);
+  const product = new Product(null, title, imageUrl, description, price);
   product.save();
 
   res.redirect("/");
@@ -26,7 +26,7 @@ exports.getEditProduct = (req, res, next) => {
   //we can access the query parameters using req.query
   //if we want to get a specific parameter, access like this: req.query.<paramName>
   //Important: the extracted value is always a string. So "true" instead of true
-  const editMode = req.query.edit === "true";
+  const editMode = req.query.edit;
   console.log("Is edit mode: ", editMode);
 
   if (!editMode) {
@@ -47,6 +47,24 @@ exports.getEditProduct = (req, res, next) => {
   });
 };
 
+exports.postEditProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDesc = req.body.description;
+  const updatedPrice = req.body.price;
+
+  const updatedProduct = new Product(
+    prodId,
+    updatedTitle,
+    updatedImageUrl,
+    updatedDesc,
+    updatedPrice
+  );
+  updatedProduct.save();
+  res.redirect("/admin/products");
+};
+
 exports.getProducts = (req, res, next) => {
   Product.fetchAll((products) => {
     res.render("admin/products", {
@@ -55,4 +73,11 @@ exports.getProducts = (req, res, next) => {
       path: "/admin/products",
     });
   });
+};
+
+exports.postDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+
+  Product.deleteById(prodId);
+  res.redirect("/admin/products");
 };
