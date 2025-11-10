@@ -10,18 +10,6 @@ const db = require("./util/database");
 
 const app = express();
 
-//we can test the database connection like this
-//execute is safer than query to avoid sql injections
-//promises have 2 methods: then and catch
-db.execute("SELECT * FROM products")
-  .then((result) => {
-    //the first element is the result set, the second is the metadata
-    console.log(result[0], result[1]);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
 app.set("view engine", "ejs");
 app.set("views", "views");
 

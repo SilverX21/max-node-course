@@ -69,3 +69,9 @@ If you now needed to start using the `start-server` script, you should do someth
 
 10. let's install the folllwing: `npm install --save ejs pug express-handlebars`
     Here we have some of the templates for dynamic content using html 💪
+
+## Section 9 - Sql Introduction
+
+Here we will install MySQL and work with it using node!
+
+11. let's install `npm install --save mysql2`

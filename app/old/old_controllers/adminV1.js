@@ -17,12 +17,7 @@ exports.postAddProduct = (req, res, next) => {
 
   //here we use the Product model to create a new product and save it
   const product = new Product(null, title, imageUrl, description, price);
-  product
-    .save()
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch((err) => console.log(err));
+  product.save();
 
   res.redirect("/");
 };
