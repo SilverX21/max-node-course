@@ -75,3 +75,10 @@ If you now needed to start using the `start-server` script, you should do someth
 Here we will install MySQL and work with it using node!
 
 11. let's install `npm install --save mysql2`
+
+## Section 10 - Sequelize
+
+12. let's install the package: `npm install --save sequelize`
+    Sequelize will require `mysql2` to be installed before being installed
+
+

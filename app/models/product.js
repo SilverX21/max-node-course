@@ -1,32 +1,31 @@
-const Cart = require("./cart");
-const db = require("../util/database");
+const Sequelize = require("sequelize");
 
-module.exports = class Product {
-  constructor(id, title, imageUrl, description, price) {
-    this.id = id;
-    this.title = title;
-    this.imageUrl = imageUrl;
-    this.description = description;
-    this.price = price;
-  }
+const sequelize = require("../util/database");
 
-  save() {
-    //we use question marks as placeholders to prevent SQL injection attacks
-    //the values will be provided as an array in the second argument of the execute method
-    //the order of the values in the array should match the order of the placeholders in the query
-    return db.execute(
-      "INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)",
-      [this.title, this.price, this.imageUrl, this.description]
-    );
-  }
+//here we will define the Product model
+//the model will be created based on the database connection we set in sequelize variable
+//forst argument is the name of the model, second argument is an object where we define the columns of the table
+const Product = sequelize.define("product", {
+  id: {
+    //defining the id column
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: Sequelize.STRING,
+  price: {
+    type: Sequelize.DOUBLE,
+    allowNull: false,
+  },
+  imageUrl: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
 
-  static deleteById(id) {}
-
-  static fetchAll() {
-    return db.execute("SELECT * FROM products");
-  }
-
-  static findById(id) {
-    return db.execute("SELECT * FROM products WHERE products.id = ?", [id]);
-  }
-};
+module.exports = Product;
