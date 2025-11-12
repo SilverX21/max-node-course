@@ -6,9 +6,21 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
 //here we import the database connection to make sure it is initialized
-const sequelize = require("./util/database");
+const db = require("./util/database");
 
 const app = express();
+
+//we can test the database connection like this
+//execute is safer than query to avoid sql injections
+//promises have 2 methods: then and catch
+db.execute("SELECT * FROM products")
+  .then((result) => {
+    //the first element is the result set, the second is the metadata
+    console.log(result[0], result[1]);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -22,16 +34,6 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-// sync will basically pick up all of the .define() methods in the project and will basically create the tables and sync up the schemas
-//this will always maintain the database up to date, but we need to be carefull with this. If we have the server running, it could update the schema/database without us wanting it to do that
-sequelize
-  .sync()
-  .then((result) => {
-    //console.log(result);
-    app.listen(3000, () => {
-      console.log("Server is running on port 3000");
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});

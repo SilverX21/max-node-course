@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "module": "esnext",
+    "target": "ES2024",
+    "moduleResolution": "Bundler",
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strict": false
+  },
+  "include": ["**/*.js"],
+  "exclude": ["node_modules", "**/node_modules/*"]
+}

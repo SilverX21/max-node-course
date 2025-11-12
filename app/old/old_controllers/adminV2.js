@@ -15,18 +15,16 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
   const price = req.body.price;
 
-  Product.create({
-    title: title,
-    price: price,
-    imageUrl: imageUrl,
-    description: description,
-  })
-    .then((result) => {
-      console.log("created a product!");
+  //here we use the Product model to create a new product and save it
+  const product = new Product(null, title, imageUrl, description, price);
+  product
+    .save()
+    .then(() => {
+      res.redirect("/");
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log(err));
+
+  res.redirect("/");
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -73,15 +71,13 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
-    .then((products) => {
-      res.render("admin/products", {
-        prods: products,
-        pageTitle: "Admin Products",
-        path: "/admin/products",
-      });
-    })
-    .catch((err) => console.log(err));
+  Product.fetchAll((products) => {
+    res.render("admin/products", {
+      prods: products,
+      pageTitle: "Admin Products",
+      path: "/admin/products",
+    });
+  });
 };
 
 exports.postDeleteProduct = (req, res, next) => {

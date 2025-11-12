@@ -2,10 +2,10 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
-    .then((products) => {
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
       res.render("shop/product-list", {
-        prods: products,
+        prods: rows,
         pageTitle: "All Products",
         path: "/products",
       });
@@ -17,19 +17,10 @@ exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId; //we get the productId from the route parameters
   console.log("got the product: " + prodId);
 
-  //we can also use the where condition to filter the results and to get our product
-  // Product.findAll({ where: { id: prodId } }).then(products => {
-  //   res.render("shop/product-detail", {
-  //     product: products[0],
-  //     pageTitle: products[0].title,
-  //     path: "/products",
-  //   });
-  // }).catch(err => console.log(err));
-
-  Product.findByPk(prodId)
-    .then((product) => {
+  Product.findById(prodId)
+    .then(([product]) => {
       res.render("shop/product-detail", {
-        product: product,
+        product: product[0],
         pageTitle: product.title,
         path: "/products",
       });
@@ -38,10 +29,14 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.findAll()
-    .then((products) => {
+  //here we get the list of products from the Product model
+  //here we pass a callback to handle the async nature of the fetchAll method, se this will allow us to render the view when the products are ready
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
+      //here we destructure the result to get the products array
+      //rows contains the result set and fieldData contains metadata about the result set
       res.render("shop/index", {
-        prods: products,
+        prods: rows,
         pageTitle: "Shop",
         path: "/",
       });
