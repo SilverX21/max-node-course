@@ -1,16 +1,21 @@
 {
   "compilerOptions": {
     "checkJs": true,
-    "module": "esnext",
+    "allowJs": true,
+    "module": "commonjs",
     "target": "ES2024",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "types": ["node"],
     "jsx": "react-jsx",
     "allowImportingTsExtensions": true,
     "strictNullChecks": false,
     "strictFunctionTypes": false,
-    "strict": false
+    "strict": false,
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["**/*.js"],
+  "typeAcquisition": {
+    "enable": true
+  },
+  "include": ["**/*"],
   "exclude": ["node_modules", "**/node_modules/*"]
 }
