@@ -34,21 +34,20 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getEditProduct = (req, res, next) => {
+    //we can access the query parameters using req.query
+    //if we want to get a specific parameter, access like this: req.query.<paramName>
+    //Important: the extracted value is always a string. So "true" instead of true
     const editMode = req.query.edit;
     console.log("Is edit mode: ", editMode);
 
     if (!editMode) {
+        //here we redirect to other place if edit mode is not enabled
         return res.redirect("/");
     }
 
     const prodId = req.params.productId;
-
-    //we can access the users products like this, we can also get the product by filtering by the prodId
-    req.user
-        .getProducts({where: {id: prodId}})
-        .then((products) => {
-            const product = products[0];
-
+    Product.findByPk(prodId)
+        .then((product) => {
             if (!product) return res.redirect("/");
 
             res.render("admin/edit-product", {
@@ -86,8 +85,7 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-    req.user
-        .getProducts()
+    Product.findAll()
         .then((products) => {
             res.render("admin/products", {
                 prods: products,
