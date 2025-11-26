@@ -29,7 +29,7 @@ exports.postAddProduct = (req, res, next) => {
         res.redirect("products");
     })
         .catch((err) => {
-            console.log(err);
+            console.log(err.red);
         });
 };
 
@@ -58,7 +58,7 @@ exports.getEditProduct = (req, res, next) => {
                 product: product,
             });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err.red));
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -82,7 +82,7 @@ exports.postEditProduct = (req, res, next) => {
             console.log("updated a product!");
             res.redirect("/admin/products");
         })
-        .catch();
+        .catch(err => console.log(err.red));
 };
 
 exports.getProducts = (req, res, next) => {
@@ -95,7 +95,7 @@ exports.getProducts = (req, res, next) => {
                 path: "/admin/products",
             });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err.red));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -109,6 +109,6 @@ exports.postDeleteProduct = (req, res, next) => {
             console.log("deleted a product!");
             res.redirect("/admin/products");
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err.red));
     res.redirect("/admin/products");
 };
