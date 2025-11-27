@@ -1,9 +1,15 @@
-const Sequelize = require("sequelize");
+const mongodb = require("mongodb");
+const colors = require("colors");
 
-//create a new Sequelize instance to connect to the database
-const sequelize = new Sequelize("node-complete", "root", "mysql2025!", {
-  dialect: "mysql",
-  host: "localhost",
-});
+const MongoClient = mongodb.MongoClient;
 
-module.exports = sequelize;
+const mongoConnect = (callback) => {
+    MongoClient.connect('mongodb+srv://silver21guitar02_db_user:bFYgz2b2oXSm2X4r@silvercluster.4hbkqav.mongodb.net/?appName=SilverCluster')
+        .then(client => {
+            console.log("Connected to MongoDB".green);
+            callback(client);
+        })
+        .catch(err => console.log(err.red));
+};
+
+module.exports = mongoConnect;

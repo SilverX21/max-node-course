@@ -81,4 +81,5 @@ Here we will install MySQL and work with it using node!
 12. let's install the package: `npm install --save sequelize`
     Sequelize will require `mysql2` to be installed before being installed
 
-
+## Section 11 - MongoDb
+13. let's install the package: `npm install --save mongodb`
