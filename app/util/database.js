@@ -4,7 +4,7 @@ const colors = require("colors");
 const MongoClient = mongodb.MongoClient;
 
 const mongoConnect = (callback) => {
-    MongoClient.connect('mongodb+srv://silver21guitar02_db_user:bFYgz2b2oXSm2X4r@silvercluster.4hbkqav.mongodb.net/?appName=SilverCluster')
+    MongoClient.connect(process.env.MONGO_DB_CONNECTION_STRING)
         .then(client => {
             console.log("Connected to MongoDB".green);
             callback(client);
