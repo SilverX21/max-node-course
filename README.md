@@ -83,3 +83,42 @@ Here we will install MySQL and work with it using node!
 
 ## Section 11 - MongoDb
 13. let's install the package: `npm install --save mongodb`
+then let's set it up like this:
+```javascript
+const mongodb = require("mongodb");
+const colors = require("colors");
+
+const MongoClient = mongodb.MongoClient;
+let _db;
+
+const mongoConnect = (callback) => {
+    console.log("MongoDB connecting...");
+    console.log(".env variable for connection string: " + process.env.MONGO_DB_CONNECTION_STRING);
+
+    MongoClient.connect(process.env.MONGO_DB_CONNECTION_STRING)
+        .then(client => {
+            console.log("Connected to MongoDB".green);
+            _db = client.db();
+            callback(client);
+        })
+        .catch(err => {
+            console.log(err.red)
+            throw err;
+        });
+};
+
+const getDb = () => {
+    if (_db) {
+        return _db;
+    }
+
+    throw "No database found";
+}
+
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;
+
+```
+
+14. For the connection string, we will need to have a .env file for best practices, to use this approach, we need to install this package: `npm install dotenv` 
+Then we need to import it in the app.js file for global usage: `require("dotenv").config()`

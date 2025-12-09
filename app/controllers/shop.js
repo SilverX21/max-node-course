@@ -2,7 +2,7 @@ const Product = require("../models/product");
 const colors = require("colors");
 
 exports.getProducts = (req, res, next) => {
-    Product.findAll()
+    Product.fetchAll()
         .then((products) => {
             res.render("shop/product-list", {
                 prods: products,
@@ -14,19 +14,8 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-    const prodId = req.params.productId; //we get the productId from the route parameters
-    console.log("got the product: " + prodId);
-
-    //we can also use the where condition to filter the results and to get our product
-    // .findAll({ where: { id: prodId } }).then(products => {
-    //   res.render("shop/product-detail", {
-    //     product: products[0],
-    //     pageTitle: products[0].title,
-    //     path: "/products",
-    //   });
-    // }).catch(err => console.log(err));
-
-    Product.findByPk(prodId)
+    const prodId = req.params.productId;
+    Product.findById(prodId)
         .then((product) => {
             res.render("shop/product-detail", {
                 product: product,
@@ -38,7 +27,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-    Product.findAll()
+    Product.fetchAll()
         .then((products) => {
             res.render("shop/index", {
                 prods: products,

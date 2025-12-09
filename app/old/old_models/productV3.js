@@ -1,4 +1,4 @@
-const Cart = require("./cart");
+const Cart = require("./cartV4");
 const db = require("../util/database");
 
 module.exports = class Product {
