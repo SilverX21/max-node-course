@@ -59,39 +59,49 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  let fetchedCart;
-  let newQuantity = 1;
+  console.log(`Received the product ${prodId}`.yellow);
 
-  req.user
-    .getCart()
-    .then((cart) => {
-      fetchedCart = cart;
-      return cart.getProducts({ where: { id: prodId } });
-    })
-    .then((products) => {
-      let product;
-      if (products.length > 0) {
-        product = products[0];
-      }
-
-      if (product) {
-        //here we get the old quantity (cartItem is added by sequelize)
-        const oldQuantity = product.cartItem.quantity;
-        newQuantity = oldQuantity + 1;
-        return product;
-      }
-
-      return Product.findByPk(prodId);
-    })
+  Product.findById(prodId)
     .then((product) => {
-      //here we want to specify the quantity, because that field is not in both of the tables
-      //for that we use the through (that is specified in the app.js) and pass down the quantity
-      return fetchedCart.addProduct(product, {
-        through: { quantity: newQuantity },
-      });
+      console.log(`Found the product ${prodId}`);
+      return req.user.addToCart(product);
     })
-    .then(() => res.redirect("/cart"))
+    .then((result) => console.log(result.green))
     .catch((err) => console.log(err.red));
+
+  // let fetchedCart;
+  // let newQuantity = 1;
+
+  // req.user
+  //   .getCart()
+  //   .then((cart) => {
+  //     fetchedCart = cart;
+  //     return cart.getProducts({ where: { id: prodId } });
+  //   })
+  //   .then((products) => {
+  //     let product;
+  //     if (products.length > 0) {
+  //       product = products[0];
+  //     }
+
+  //     if (product) {
+  //       //here we get the old quantity (cartItem is added by sequelize)
+  //       const oldQuantity = product.cartItem.quantity;
+  //       newQuantity = oldQuantity + 1;
+  //       return product;
+  //     }
+
+  //     return Product.findByPk(prodId);
+  //   })
+  //   .then((product) => {
+  //     //here we want to specify the quantity, because that field is not in both of the tables
+  //     //for that we use the through (that is specified in the app.js) and pass down the quantity
+  //     return fetchedCart.addProduct(product, {
+  //       through: { quantity: newQuantity },
+  //     });
+  //   })
+  //   .then(() => res.redirect("/cart"))
+  //   .catch((err) => console.log(err.red));
 };
 
 exports.postDeleteCartProduct = (req, res, next) => {

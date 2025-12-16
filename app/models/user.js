@@ -21,13 +21,19 @@ class User {
   }
 
   addToCart(product) {
-    //
-    // const cartProduct = this.cart.items.findIndex(cp => {
-    //     return cp._id === product._id;
-    // });
+    const cartProductIndex = this.cart.items.findIndex((cp) => {
+      return cp.productId === product._id;
+    });
 
-    const updatedCart = { items: [{ ...product, quantity: 1 }] };
+    let newQuantity = 1;
 
+    if (cartProductIndex >= 0) {
+      newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+    }
+
+    const updatedCart = {
+      items: [{ productId: new ObjectId(product._id), quantity: newQuantity }],
+    };
     const db = getDb();
 
     //here we update the cart of the user
@@ -37,7 +43,7 @@ class User {
         { _id: new ObjectId(this._id) },
         { $set: { cart: updatedCart } }
       )
-      .then()
+      .then((result) => console.log(result.green))
       .catch((err) => console.log(err.red));
   }
 

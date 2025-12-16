@@ -6,22 +6,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "start-server": "node app.js"
+    "start-server": "node app.js",
+    "lint": "eslint"
   },
   "author": "Silver",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/express": "^5.0.5",
-    "@types/node": "^24.10.1",
+    "@types/node": "^24.10.4",
     "colors": "^1.4.0",
+    "eslint": "^9.39.2",
     "express-handlebars": "^8.0.3",
+    "globals": "^16.5.0",
     "nodemon": "^3.1.10"
   },
   "dependencies": {
     "body-parser": "^2.2.0",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
-    "eslint": "^9.39.1",
     "express": "^5.1.0",
     "mongodb": "^7.0.0",
     "mysql2": "^3.15.3",

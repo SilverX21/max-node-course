@@ -4,6 +4,41 @@ This course is to learn more about Node.js and to begin my journey on JavaScript
 
 We will work inside the app folder, so this way we can follow after the section 4 on this course!
 
+## 0. First setup
+Check this video out for the walkthrough: https://www.youtube.com/watch?v=GTDYsV5pyZU
+
+Let's start to setup the project, so we can have a better developer experience.
+
+### 0.1 Eslint
+Let's install `eslint` first: `npm init @eslint/config@latest`
+Let's set it up like this:
+
+√ What do you want to lint? · javascript
+√ How would you like to use ESLint? · problems
+√ What type of modules does your project use? · commonjs
+√ Which framework does your project use? · none
+√ Does your project use TypeScript? · No / Yes
+√ Where does your code run? · node
+
+It will generate the following file: `eslint.config.mjs`
+
+Then, let's add a new script to the package.json:
+```
+"lint": "eslint"
+```
+
+This will output in the terminal errors, problems and other warnings of your application
+
+Check the docs for `eslint`: https://eslint.org/docs/latest/use/configure/
+
+### 0.2 Prettier
+For Prettier, you can check the docs here for the integration with linters: https://prettier.io/docs/integrating-with-linters
+
+To integrate with `eslint` we can first install these packages: 
+- `npm install --save-dev eslint-plugin-prettier eslint-config-prettier` 
+- `npm install --save-dev --save-exact prettier`
+
+
 ## 1. Section 4 - Improved Development Workflow and Debugging
 
 1. First, we created the app folder, then we proceeded to run the following script, inside the app directory: `npm init`
