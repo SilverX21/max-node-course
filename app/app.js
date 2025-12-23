@@ -5,10 +5,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const colors = require("colors");
-const mongodb = require("mongodb");
+const mongoose = require("mongoose");
 
 const errorController = require("./controllers/error");
-const mongoConnect = require("./util/database").mongoConnect;
 const User = require("./models/user");
 
 const app = express();
@@ -19,16 +18,16 @@ app.set("views", "views");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  User.findById("6938b4c999dc03f11724b05b")
-    .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
-      next();
-    })
-    .catch((err) => console.log(err.red));
+    User.findById("694a9ad79dd42ee9f95f1971")
+        .then((user) => {
+            req.user = user;
+            next();
+        })
+        .catch((err) => console.log(err.red));
 });
 
 //here we change to use the admin routes for any route that starts with /admin
@@ -37,9 +36,24 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-//here we connect to mongodb
-mongoConnect(() => {
-  app.listen(3000, () => {
-    console.log("Server started on port 3000".blue);
-  });
-});
+//connect to MongoDB using mongoose
+//mongoose will manage the connection pool for us
+mongoose
+    .connect(process.env.MONGO_DB_CONNECTION_STRING)
+    .then((result) => {
+        User.findOne()
+            .then(user => {
+                if (!user) {
+                    const user = new User({
+                        name: "Silver",
+                        email: "silver@gmail.com",
+                        items: []
+                    })
+                    user.save();
+                }
+            });
+
+        app.listen(3000);
+        console.log("Connected to MongoDB".magenta);
+    })
+    .catch((err) => console.log(err));

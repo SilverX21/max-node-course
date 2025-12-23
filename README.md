@@ -116,7 +116,7 @@ Here we will install MySQL and work with it using node!
 12. let's install the package: `npm install --save sequelize`
     Sequelize will require `mysql2` to be installed before being installed
 
-## Section 11 - MongoDb
+## Section 12 - MongoDb
 13. let's install the package: `npm install --save mongodb`
 then let's set it up like this:
 ```javascript
@@ -157,3 +157,9 @@ exports.getDb = getDb;
 
 14. For the connection string, we will need to have a .env file for best practices, to use this approach, we need to install this package: `npm install dotenv` 
 Then we need to import it in the app.js file for global usage: `require("dotenv").config()`
+
+## Section 13 - Working with Mongoose
+
+15. To add Mongoose to our project, we need to install the package `npm install --save mongoose` 
+
+Mongoose is an ODM (Object Document Mapper), it can pick up our documents and help us to focus on our data instead of focusing in our queries

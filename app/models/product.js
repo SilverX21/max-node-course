@@ -1,85 +1,118 @@
-const mongodb = require("mongodb");
-//we can access the getDb method like this
-const getDb = require("../util/database").getDb;
-const colors = require("colors");
+const mongoose = require("mongoose");
 
-class Product {
-  constructor(title, price, description, imageUrl, id, userId) {
-    this.title = title;
-    this.price = price;
-    this.description = description;
-    this.imageUrl = imageUrl;
-    this._id = id ? new mongodb.ObjectId(id) : null;
-    this.userId = userId;
+//we create a shorthand for the mongoose.Schema class
+const Schema = mongoose.Schema;
+
+// here we define the schema for the product model
+const productSchema = new Schema({
+  title: {
+    type: String, //we define the type of the field
+    required: true, //if it is required
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  imageUrl: {
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User", //here we create the relationship to the user
+    required: true,
   }
+});
 
-  save() {
-    const db = getDb();
-    let dbOp;
-    if (this._id) {
-      // here we update the product, the update one will need the filter and the update object
-      dbOp = db
-        .collection("products")
-        .updateOne({ _id: this._id }, { $set: this }); //the $set operator will set all the fields of the object provided
-    } else {
-      //first we access the collection and then we work through it
-      dbOp = db.collection("products").insertOne(this); //here we insert the current object
-    }
+//mongoose has modules, to have a module, we need to define a name for the model (Product) and the blueprint for it (productSchema)
+module.exports = mongoose.model("Product", productSchema);
 
-    return dbOp
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(err.red);
-      });
-  }
+// const mongodb = require("mongodb");
+// //we can access the getDb method like this
+// const getDb = require("../util/database").getDb;
+// const colors = require("colors");
 
-  static fetchAll() {
-    const db = getDb();
-    return db
-      .collection("products")
-      .find() //find will return a cursor is an object that allows to go through our elements
-      .toArray()
-      .then((products) => {
-        // console.log(products);
-        return products;
-      })
-      .catch((err) => {
-        console.log(err.red);
-      });
-  }
+// class Product {
+//   constructor(title, price, description, imageUrl, id, userId) {
+//     this.title = title;
+//     this.price = price;
+//     this.description = description;
+//     this.imageUrl = imageUrl;
+//     this._id = id ? new mongodb.ObjectId(id) : null;
+//     this.userId = userId;
+//   }
 
-  static findById(prodId) {
-    const db = getDb();
+//   save() {
+//     const db = getDb();
+//     let dbOp;
+//     if (this._id) {
+//       // here we update the product, the update one will need the filter and the update object
+//       dbOp = db
+//         .collection("products")
+//         .updateOne({ _id: this._id }, { $set: this }); //the $set operator will set all the fields of the object provided
+//     } else {
+//       //first we access the collection and then we work through it
+//       dbOp = db.collection("products").insertOne(this); //here we insert the current object
+//     }
 
-    return (
-      db
-        .collection("products")
-        .findOne({ _id: new mongodb.ObjectId(prodId) }) //the _id is a Bson, so we need to convert it so we can get it from the mongodb instance
-        //.next() //we use the next function to return the document
-        .then((product) => {
-          // console.log(product);
-          return product;
-        })
-        .catch((err) => {
-          console.log(err.red);
-        })
-    );
-  }
+//     return dbOp
+//       .then((result) => {
+//         console.log(result);
+//       })
+//       .catch((err) => {
+//         console.log(err.red);
+//       });
+//   }
 
-  static deleteById(prodId) {
-    const db = getDb();
-    return db
-      .collection("products")
-      .deleteOne({ _id: new mongodb.ObjectId(prodId) }) //here we delete an object using it's id
-      .then((result) => {
-        console.log("Product deleted".green);
-      })
-      .catch((err) => {
-        console.log(err.red);
-      });
-  }
-}
+//   static fetchAll() {
+//     const db = getDb();
+//     return db
+//       .collection("products")
+//       .find() //find will return a cursor is an object that allows to go through our elements
+//       .toArray()
+//       .then((products) => {
+//         // console.log(products);
+//         return products;
+//       })
+//       .catch((err) => {
+//         console.log(err.red);
+//       });
+//   }
 
-module.exports = Product;
+//   static findById(prodId) {
+//     const db = getDb();
+
+//     return (
+//       db
+//         .collection("products")
+//         .findOne({ _id: new mongodb.ObjectId(prodId) }) //the _id is a Bson, so we need to convert it so we can get it from the mongodb instance
+//         //.next() //we use the next function to return the document
+//         .then((product) => {
+//           // console.log(product);
+//           return product;
+//         })
+//         .catch((err) => {
+//           console.log(err.red);
+//         })
+//     );
+//   }
+
+//   static deleteById(prodId) {
+//     const db = getDb();
+//     return db
+//       .collection("products")
+//       .deleteOne({ _id: new mongodb.ObjectId(prodId) }) //here we delete an object using it's id
+//       .then((result) => {
+//         console.log("Product deleted".green);
+//       })
+//       .catch((err) => {
+//         console.log(err.red);
+//       });
+//   }
+// }
+
+// module.exports = Product;
