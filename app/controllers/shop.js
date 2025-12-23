@@ -7,7 +7,10 @@ exports.getProducts = (req, res, next) => {
         .then((products) => {
             console.log(products);
             res.render("shop/product-list", {
-                prods: products, pageTitle: "All Products", path: "/products",
+                prods: products,
+                pageTitle: "All Products",
+                path: "/products",
+                isAuthenticated: req.isLoggedIn
             });
         })
         .catch((err) => console.log(err.red));
@@ -20,7 +23,10 @@ exports.getProduct = (req, res, next) => {
     Product.findById(prodId)
         .then((product) => {
             res.render("shop/product-detail", {
-                product: product, pageTitle: product.title, path: "/products",
+                product: product,
+                pageTitle: product.title,
+                path: "/products",
+                isAuthenticated: req.isLoggedIn
             });
         })
         .catch((err) => console.log(err.red));
@@ -30,7 +36,10 @@ exports.getIndex = (req, res, next) => {
     Product.find() //mongoose uses find that will retrieve all products directly
         .then((products) => {
             res.render("shop/index", {
-                prods: products, pageTitle: "Shop", path: "/",
+                prods: products,
+                pageTitle: "Shop",
+                path: "/",
+                isAuthenticated: req.isLoggedIn
             });
         })
         .catch((err) => console.log(err.red));
@@ -42,7 +51,10 @@ exports.getCart = (req, res, next) => {
         .then((user) => {
             const products = user.cart.items;
             res.render("shop/cart", {
-                path: "/cart", pageTitle: "Your Cart", products: products,
+                path: "/cart",
+                pageTitle: "Your Cart",
+                products: products,
+                isAuthenticated: req.isLoggedIn
             });
         })
         .catch((err) => console.log(err.red));
@@ -101,6 +113,7 @@ exports.getOrders = (req, res, next) => {
                 path: "/orders",
                 pageTitle: "Your Orders",
                 orders: orders,
+                isAuthenticated: req.isLoggedIn
             });
         })
         .catch((err) => console.log(err.red));

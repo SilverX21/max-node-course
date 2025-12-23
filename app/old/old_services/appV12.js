@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 //here we change to use the admin routes for any route that starts with /admin
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
-app.use(authRoutes);
+app.use(auth);
 
 app.use(errorController.get404);
 
