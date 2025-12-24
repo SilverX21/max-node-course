@@ -5,11 +5,13 @@ This course is to learn more about Node.js and to begin my journey on JavaScript
 We will work inside the app folder, so this way we can follow after the section 4 on this course!
 
 ## 0. First setup
+
 Check this video out for the walkthrough: https://www.youtube.com/watch?v=GTDYsV5pyZU
 
 Let's start to setup the project, so we can have a better developer experience.
 
 ### 0.1 Eslint
+
 Let's install `eslint` first: `npm init @eslint/config@latest`
 Let's set it up like this:
 
@@ -23,6 +25,7 @@ Let's set it up like this:
 It will generate the following file: `eslint.config.mjs`
 
 Then, let's add a new script to the package.json:
+
 ```
 "lint": "eslint"
 ```
@@ -32,12 +35,13 @@ This will output in the terminal errors, problems and other warnings of your app
 Check the docs for `eslint`: https://eslint.org/docs/latest/use/configure/
 
 ### 0.2 Prettier
+
 For Prettier, you can check the docs here for the integration with linters: https://prettier.io/docs/integrating-with-linters
 
-To integrate with `eslint` we can first install these packages: 
-- `npm install --save-dev eslint-plugin-prettier eslint-config-prettier` 
-- `npm install --save-dev --save-exact prettier`
+To integrate with `eslint` we can first install these packages:
 
+- `npm install --save-dev eslint-plugin-prettier eslint-config-prettier`
+- `npm install --save-dev --save-exact prettier`
 
 ## 1. Section 4 - Improved Development Workflow and Debugging
 
@@ -117,8 +121,10 @@ Here we will install MySQL and work with it using node!
     Sequelize will require `mysql2` to be installed before being installed
 
 ## Section 12 - MongoDb
+
 13. let's install the package: `npm install --save mongodb`
-then let's set it up like this:
+    then let's set it up like this:
+
 ```javascript
 const mongodb = require("mongodb");
 const colors = require("colors");
@@ -127,39 +133,47 @@ const MongoClient = mongodb.MongoClient;
 let _db;
 
 const mongoConnect = (callback) => {
-    console.log("MongoDB connecting...");
-    console.log(".env variable for connection string: " + process.env.MONGO_DB_CONNECTION_STRING);
+  console.log("MongoDB connecting...");
+  console.log(
+    ".env variable for connection string: " +
+      process.env.MONGO_DB_CONNECTION_STRING
+  );
 
-    MongoClient.connect(process.env.MONGO_DB_CONNECTION_STRING)
-        .then(client => {
-            console.log("Connected to MongoDB".green);
-            _db = client.db();
-            callback(client);
-        })
-        .catch(err => {
-            console.log(err.red)
-            throw err;
-        });
+  MongoClient.connect(process.env.MONGO_DB_CONNECTION_STRING)
+    .then((client) => {
+      console.log("Connected to MongoDB".green);
+      _db = client.db();
+      callback(client);
+    })
+    .catch((err) => {
+      console.log(err.red);
+      throw err;
+    });
 };
 
 const getDb = () => {
-    if (_db) {
-        return _db;
-    }
+  if (_db) {
+    return _db;
+  }
 
-    throw "No database found";
-}
+  throw "No database found";
+};
 
 exports.mongoConnect = mongoConnect;
 exports.getDb = getDb;
-
 ```
 
-14. For the connection string, we will need to have a .env file for best practices, to use this approach, we need to install this package: `npm install dotenv` 
-Then we need to import it in the app.js file for global usage: `require("dotenv").config()`
+14. For the connection string, we will need to have a .env file for best practices, to use this approach, we need to install this package: `npm install dotenv`
+    Then we need to import it in the app.js file for global usage: `require("dotenv").config()`
 
 ## Section 13 - Working with Mongoose
 
-15. To add Mongoose to our project, we need to install the package `npm install --save mongoose` 
+15. To add Mongoose to our project, we need to install the package `npm install --save mongoose`
 
 Mongoose is an ODM (Object Document Mapper), it can pick up our documents and help us to focus on our data instead of focusing in our queries
+
+## Section 14 - Sessions and Cookies 🍪
+
+Let's start by installing this package: `npm install --save express-session`
+
+This will add express middleware for session management
