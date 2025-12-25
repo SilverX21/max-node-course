@@ -1,4 +1,6 @@
-﻿exports.getLogin = (req, res, next) => {
+﻿const User = require("../models/user");
+
+exports.getLogin = (req, res, next) => {
   // const isLoggedIn =
   //   req.get("Cookie") && req.get("Cookie").includes("loggedIn=true");
   console.log(req.session);
@@ -16,7 +18,27 @@ exports.postLogin = (req, res, next) => {
   //res.setHeader("Set-Cookie", "loggedIn=true");
 
   //we now use sessions to manage login state by accessing the session object on the request that was added by express-session
-  req.session.isLoggedIn = true;
+  User.findById("694a9ad79dd42ee9f95f1971")
+    .then((user) => {
+      req.session.isLoggedIn = true;
+      req.session.user = {
+        _id: user._id.toString(), //this needs to be converted to string because of mongoose objectId type
+        name: user.name,
+        email: user.email,
+        cart: user.cart,
+      };
+      req.session.save((err) => {
+        console.log(err);
+        res.redirect("/");
+      }); //this will force the session to be saved before we redirect
+    })
+    .catch((err) => console.log(err));
+};
 
-  res.redirect("/");
+exports.postLogout = (req, res, next) => {
+  //here we destroy the session on logout
+  req.session.destroy((err) => {
+    console.log(err);
+    res.redirect("/");
+  });
 };
