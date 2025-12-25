@@ -177,3 +177,26 @@ Mongoose is an ODM (Object Document Mapper), it can pick up our documents and he
 Let's start by installing this package: `npm install --save express-session`
 
 This will add express middleware for session management
+
+16. Let's use the database to help us to have our session data stored. We are using MongoDb, so we can use the following package: `npm install --save connect-mongodb-session`
+
+We can create a session store for MongoDB like this:
+```javascript
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+
+const store = new MongoDBStore({
+  uri: process.env.MONGO_DB_CONNECTION_STRING,
+  collection: "sessions", //this is the name of the collection where the sessions will be stored
+});
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: store, //here we pass the store instance to store sessions in MongoDB
+  })
+);
+
+```

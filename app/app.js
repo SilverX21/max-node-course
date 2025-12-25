@@ -5,11 +5,17 @@ const bodyParser = require("body-parser");
 const colors = require("colors");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const errorController = require("./controllers/error");
 const User = require("./models/user");
 
 const app = express();
+//here we create a new MongoDBStore instance to store our sessions in MongoDB
+const store = new MongoDBStore({
+  uri: process.env.MONGO_DB_CONNECTION_STRING,
+  collection: "sessions", //this is the name of the collection where the sessions will be stored
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -29,6 +35,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: store, //here we pass the store instance to store sessions in MongoDB
   })
 );
 
