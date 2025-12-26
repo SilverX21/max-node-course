@@ -6,8 +6,6 @@ const colors = require("colors");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
-const csrf = require("csurf");
-const flash = require("connect-flash");
 
 const errorController = require("./controllers/error");
 const User = require("./models/user");
@@ -18,9 +16,6 @@ const store = new MongoDBStore({
   uri: process.env.MONGO_DB_CONNECTION_STRING,
   collection: "sessions", //this is the name of the collection where the sessions will be stored
 });
-
-//here we set up CSRF protection middleware
-const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -44,11 +39,6 @@ app.use(
   })
 );
 
-//here we initialize the CSRF protection middleware after the session middleware
-app.use(csrfProtection);
-
-app.use(flash());
-
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -60,13 +50,6 @@ app.use((req, res, next) => {
       next();
     })
     .catch((err) => console.log(err.red));
-});
-
-app.use((req, res, next) => {
-  //for every view we render, we will have these two variables available
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
 });
 
 //here we change to use the admin routes for any route that starts with /admin

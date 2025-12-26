@@ -181,6 +181,7 @@ This will add express middleware for session management
 16. Let's use the database to help us to have our session data stored. We are using MongoDb, so we can use the following package: `npm install --save connect-mongodb-session`
 
 We can create a session store for MongoDB like this:
+
 ```javascript
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
@@ -198,5 +199,103 @@ app.use(
     store: store, //here we pass the store instance to store sessions in MongoDB
   })
 );
+```
 
+## Section 15 - Adding Authentication
+
+17. Let's start by adding this package: `npm install --save bcryptjs`
+
+This package can help us encrypt some data, in this case, we will need to encrypt passwords in order to not have security flaws in our code 🔑
+
+18. We can use middleware to protect our routes from being accessed without the required user rights.
+    For that, we can create a middleware (this way it is more scalable). We can do it like this:
+
+```javascript
+module.exports = (req, res, next) => {
+  //first we check if it's authenticated
+  if (!req.session.isLoggedIn) {
+    return res.redirect("/login");
+  }
+  next();
+};
+```
+
+Then, we can go to the routes folder and then use it like this:
+
+```javascript
+const isAuth = require("../middleware/is-auth");
+
+//here we add the isAuth middleware to protect the route before calling the controller
+router.get("/add-product", isAuth, adminController.getAddProduct);
+```
+
+The middleware is executed from left to right, if the `isAuth` one doesn't call the `next()` function, it won't let the next middleware to execute 🚀
+
+19. To protect us against CSRF attacks, we can use the following package: `npm install --save csurf`
+    This package can generate tokens to embed in our pages that change the user state, this way we can protect our requests and the user as well.
+
+```javascript
+const csrf = require("csurf");
+//here we set up CSRF protection middleware
+const csrfProtection = csrf();
+
+//session middleware here
+
+//here we initialize the CSRF protection middleware after the session middleware
+app.use(csrfProtection);
+```
+
+Then we need to add it in the views, so we can do post requests as well, if we don't do this, it will not work and we will have an exception.
+To pass it to the views, we can do something like this:
+
+```javascript
+res.render("shop/index", {
+  prods: products,
+  pageTitle: "Shop",
+  path: "/",
+  isAuthenticated: req.session.isLoggedIn,
+  csrfToken: req.csrfToken(), // Pass the CSRF token to the view
+});
+```
+
+In the views, when we do post requests (in forms) we can add something like this inside the form element:
+
+```ejs
+<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+```
+
+20. If we want to pass some data that needs to be in every request to the views, instead of duplicating the code, we can do something like this:
+
+```javascript
+//...after the code for csrf and auth
+app.use((req, res, next) => {
+  //for every view we render, we will have these two variables available
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+```
+
+21. For us to send messages to the client (user), we need to pass in the render of the pages those messages.
+22. For that, we can use the package `npm install --save connect-flash` to add that functionality to it and help us do that like this:
+
+```javascript
+//...code for the session
+const flash = require("connect-flash");
+
+app.use(flash());
+
+//...this is the controller endpoint
+if (!user) {
+  //we pass the key name, and the message 
+  req.flash("error", "Invalid email or password.");
+  return res.redirect("/login");
+}
+
+//...other endpoint
+res.render("auth/login", {
+    path: "/login",
+    pageTitle: "Login",
+    errorMessage: req.flash("error"), //here we pass the error message and we access the message through the key we created before
+  });
 ```
