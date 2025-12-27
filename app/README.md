@@ -6,7 +6,7 @@ We will work inside the app folder, so this way we can follow after the section 
 
 ## 0. First setup
 
-Check this video out for the walkthrough: https://www.youtube.com/watch?v=GTDYsV5pyZU
+Check this video out for the walkthrough: [Project Setup](https://www.youtube.com/watch?v=GTDYsV5pyZU)
 
 Let's start to setup the project, so we can have a better developer experience.
 
@@ -36,7 +36,7 @@ Check the docs for `eslint`: https://eslint.org/docs/latest/use/configure/
 
 ### 0.2 Prettier
 
-For Prettier, you can check the docs here for the integration with linters: https://prettier.io/docs/integrating-with-linters
+For Prettier, you can check the docs here for the integration with linters: [ESLint setup](https://prettier.io/docs/integrating-with-linters)
 
 To integrate with `eslint` we can first install these packages:
 
@@ -287,15 +287,48 @@ app.use(flash());
 
 //...this is the controller endpoint
 if (!user) {
-  //we pass the key name, and the message 
+  //we pass the key name, and the message
   req.flash("error", "Invalid email or password.");
   return res.redirect("/login");
 }
 
 //...other endpoint
 res.render("auth/login", {
-    path: "/login",
-    pageTitle: "Login",
-    errorMessage: req.flash("error"), //here we pass the error message and we access the message through the key we created before
-  });
+  path: "/login",
+  pageTitle: "Login",
+  errorMessage: req.flash("error"), //here we pass the error message and we access the message through the key we created before
+});
+```
+
+## Section 16 - Sending Emails
+
+23. In this section we will introduce mail sending, we are going to use SendGrid as a mail server 📧
+
+    For the email sending, we can use these packages: `npm install --save nodemailer`
+
+_NOTE_: Instead of following the sendgrid mail settings, we are using google app. For that, we can follow this to set it up: [Google App Setup](https://www.youtube.com/watch?v=cqdAS49RthQ)
+
+Here's a basic setup:
+
+```javascript
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  host: "your_host",
+  port: 111,
+  secure: true,
+  auth: {
+    user: "your_email",
+    pass: "your_key",
+  },
+});
+
+transporter
+  .sendMail({
+    to: email,
+    subject: "Signup succeeded!",
+    html: "<h1>You successfully signed up!</h1>",
+  })
+  .then((result) => console.log(result))
+  .catch((err) => console.log(err));
 ```
