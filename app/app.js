@@ -93,6 +93,6 @@ mongoose
     // });
 
     app.listen(3000);
-    console.log("Connected to MongoDB".magenta);
+    console.log("Connected to MongoDB".bgMagenta.white);
   })
-  .catch((err) => console.log(err));
+  .catch((err) => console.log(err.red));

@@ -342,7 +342,93 @@ Here we will be adding some safety features to our application.
 ```javascript
 const { randomBytes } = require("node:crypto");
 
+randomBytes(32, (err, buffer) => {
+  if (err) {
+    console.log(err);
+    return res.redirect("/reset");
+  }
 
+  const token = buffer.toString("hex");
+
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        req.flash("error", "No account with that email found.");
+        return res.redirect("/reset");
+      }
+
+      //we added 2 fields to the user model to store the reset token and its expiration time
+      //this will allow us to verify the token later when the user clicks the link in the email
+      user.resetToken = token;
+      user.resetTokenExpiration = Date.now() + 3_600_000; //this is 1 hour from now
+      return user.save();
+    })
+    .then((result) => {
+      res.redirect("/");
+      transporter.sendMail({
+        to: req.body.email,
+        subject: "Password Reset",
+        html: `
+          <p>You requested a password reset</p>
+          <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to reset your password</p>
+          `,
+      });
+    })
+    .catch((err) => console.log(err));
+});
 ```
 
 _NOTE_: For crypto we needed to use an updated version of node, for that, we used the `randomBytes` function from the documentation: [Crypto Documentation](https://nodejs.org/api/crypto.html)
+
+## Section 18 - Understanding Validation
+
+Here we will focus on server side validation! 🚀
+
+25. Let's install the package `npm install express-validator`, this is an express validator, we can check the documentation here: [Express Validator documentation](https://express-validator.github.io/docs/)
+
+We can set it up in the routes files, this way it's cleaner! Here's an example:
+
+```javascript
+//... routes file
+const { check } = require("express-validator");
+//here we can pass the name of the field we want to validate and then use the package methods to do some checking
+//we can also pass a custom message using .withMessage() -> it will refer to the validation before
+router.post(
+  "/signup",
+  check("email").isEmail().withMessage("Please enter a valid email"),
+  authController.postSignup
+);
+
+//... in the controller
+const { validationResult } = require("express-validator");
+
+exports.postSignup = (req, res, next) => {
+  onst errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: errors.array(),
+    });
+  }
+
+  //...rest of the code
+};
+```
+
+We can also have custom validators like this:
+
+```javascript
+check("email")
+  .isEmail()
+  .withMessage("Please enter a valid email")
+  .custom((value, { req }) => {
+    if (value === "test@test.com") {
+      throw new Error("This email address is invalid");
+    }
+    return true;
+  });
+```

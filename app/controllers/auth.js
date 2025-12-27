@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 //this is a node built in crypto module
 const { randomBytes } = require("node:crypto");
-const { reset } = require("colors");
+const { colors } = require("colors");
+const { validationResult } = require("express-validator");
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -105,6 +106,19 @@ exports.postSignup = (req, res, next) => {
   // const confirmPassword = req.body.confirmPassword;
 
   const { email, password, confirmPassword } = req.body;
+
+  //here we will check our validation errors (if there is any)
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: errors.array(),
+    });
+  }
 
   User.findOne({ email: email })
     .then((userDoc) => {
