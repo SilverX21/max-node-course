@@ -332,3 +332,17 @@ transporter
   .then((result) => console.log(result))
   .catch((err) => console.log(err));
 ```
+
+## Section 17 - Advanced Authentication
+
+Here we will be adding some safety features to our application.
+
+24. Let's add a password reset feature, for this, we need to do the following:
+
+```javascript
+const { randomBytes } = require("node:crypto");
+
+
+```
+
+_NOTE_: For crypto we needed to use an updated version of node, for that, we used the `randomBytes` function from the documentation: [Crypto Documentation](https://nodejs.org/api/crypto.html)
