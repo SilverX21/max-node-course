@@ -1,7 +1,6 @@
 const Product = require("../models/product");
 const { validationResult } = require("express-validator");
 const mongoose = require("mongoose");
-const fileHelper = require("../util/file");
 
 //here we are exporting a function that will handle the request to get the add product page
 exports.getAddProduct = (req, res, next) => {
@@ -22,26 +21,9 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  const image = req.file;
+  const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-
-  if (!image) {
-    return res.status(422).render("admin/edit-product", {
-      pageTitle: "Add Product",
-      path: "/admin/add-product",
-      editing: false,
-      hasError: true,
-      product: {
-        title: title,
-        price: price,
-        description: description,
-      },
-      errorMessage: "Attached file is not an image",
-      validationErrors: [],
-    });
-  }
-
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -52,6 +34,7 @@ exports.postAddProduct = (req, res, next) => {
       hasError: true,
       product: {
         title: title,
+        imageUrl: imageUrl,
         price: price,
         description: description,
       },
@@ -59,8 +42,6 @@ exports.postAddProduct = (req, res, next) => {
       validationErrors: errors.array(),
     });
   }
-
-  const imageUrl = image.path;
 
   //here we can access req.user._id because we are setting it up in the app.js
   const product = new Product({
@@ -121,7 +102,7 @@ exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
   const updatedPrice = req.body.price;
-  const image = req.file;
+  const updatedImageUrl = req.body.imageUrl;
   const updatedDesc = req.body.description;
   const errors = validationResult(req);
 
@@ -134,6 +115,7 @@ exports.postEditProduct = (req, res, next) => {
       hasError: true,
       product: {
         title: updatedTitle,
+        imageUrl: updatedImageUrl,
         price: updatedPrice,
         description: updatedDesc,
         _id: prodId.toString(),
@@ -152,13 +134,7 @@ exports.postEditProduct = (req, res, next) => {
       product.title = updatedTitle;
       product.price = updatedPrice;
       product.description = updatedDesc;
-
-      if (image) {
-        fileHelper.deleteFile(product.imageUrl);
-
-        //here we only set the new image if the user inserted a new one
-        product.imageUrl = image.path;
-      }
+      product.imageUrl = updatedImageUrl;
 
       //here we have access to mongoose object and methods
       return product.save().then((result) => {
@@ -194,16 +170,9 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId)
-    .then((product) => {
-      if (!product) return next(new Error("Product not found"));
-
-      fileHelper.deleteFile(product.imageUrl);
-
-      return Product.deleteOne({ _id: prodId, userId: req.user._id });
-    })
+  Product.deleteOne({ _id: prodId, userId: req.user._id })
     .then(() => {
-      console.log("Destroyed the product");
+      console.log("DESTROYED PRODUCT");
       res.redirect("/admin/products");
     })
     .catch((err) => {

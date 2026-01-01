@@ -21,10 +21,6 @@ router.post(
       .isLength({ min: 3 })
       .withMessage("The title must have more than 2 characters")
       .trim(),
-    body("imageUrl")
-      .isURL()
-      .withMessage("the image url must contain a valid url")
-      .trim(),
     body("price").isFloat().withMessage("The price must be a number"),
     body("description")
       .notEmpty()
@@ -46,10 +42,6 @@ router.post(
       .isString()
       .isLength({ min: 3 })
       .withMessage("The title must have more than 2 characters")
-      .trim(),
-    body("imageUrl")
-      .isURL()
-      .withMessage("the image url must contain a valid url")
       .trim(),
     body("price").isFloat().withMessage("The price must be a number"),
     body("description")
