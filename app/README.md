@@ -491,43 +491,51 @@ Let's start by installing this package: `npm install --save multer`
 Multer is a package that lets us parse incoming requests for files
 
 We can set up multer like this:
+
 ```javascript
 const multer = require("multer");
 
 //this is a storage engine that multer can use
 const fileStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        //this takes a request, a file and a callback function
-        //the first argument it's an error message, if it's null, multer will proceed to store it in the "images" folder
-        cb(null, "images");
-    },
-    filename: (req, file, cb) => {
-        //here we have the same for the error message, and then we have the file name we want
-        //we need first to do these tweaks to the timestamp so we don't have problems saving it in the disk
-        const safeTimestamp = new Date().toISOString().replace(/:/g, "-");
-        const safeOriginal = file.originalname.replace(/[<>:"/\\|?*]/g, "_");
-        cb(null, `${safeTimestamp}-${safeOriginal}`);
-    },
+  destination: (req, file, cb) => {
+    //this takes a request, a file and a callback function
+    //the first argument it's an error message, if it's null, multer will proceed to store it in the "images" folder
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    //here we have the same for the error message, and then we have the file name we want
+    //we need first to do these tweaks to the timestamp so we don't have problems saving it in the disk
+    const safeTimestamp = new Date().toISOString().replace(/:/g, "-");
+    const safeOriginal = file.originalname.replace(/[<>:"/\\|?*]/g, "_");
+    cb(null, `${safeTimestamp}-${safeOriginal}`);
+  },
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
 };
 
 //here we use multer to parse incoming requests where the image property will have a file
 //the dest property refers to "destination", it will basically store the image in a folder called "images"
 //here we pass the filStorage to have the options we defined above
 //the fileFilter options will let us filter which types of files can be uploaded
-app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single("image"));
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 ```
 
 As you can see, we can have multer have a defined way to store the images we pass through our requests from the forms
 
 For us to send a file in a response, we must stream it like this:
+
 ```javascript
 const file = fs.createReadStream(invoicePath);
 res.setHeader("Content-Type", "application/pdf");
@@ -538,7 +546,7 @@ file.pipe(res);
 
 This will write the data into the response object and send it to the user, this data will be writen chunk by chunk. 🚀
 
-We can also create a .pdf file on the fly, for that we can use this package: `npm install --save pdfkit`. 
+We can also create a .pdf file on the fly, for that we can use this package: `npm install --save pdfkit`.
 To use it, we can do something like this:
 
 ```javascript
@@ -546,22 +554,37 @@ const PDFDocument = require("pdfkit");
 
 //we can then use it like this:
 exports.getPdfDoc = (req, res, next) => {
-    const invoicePath = "some_cool_name";
+  const invoicePath = "some_cool_name";
 
-    const pdfDoc = new PDFDocument();
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `inline; filename="${invoiceName}"`);
+  const pdfDoc = new PDFDocument();
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `inline; filename="${invoiceName}"`);
 
-    //here we start a writing stream
-    pdfDoc.pipe(fs.createWriteStream(invoicePath));
-    pdfDoc.pipe(res);
+  //here we start a writing stream
+  pdfDoc.pipe(fs.createWriteStream(invoicePath));
+  pdfDoc.pipe(res);
 
-    //here we are writing to the document
-    pdfDoc.text("Hello World");
-    //here we close the stream and the response will be sent
-    pdfDoc.end();
-}
+  //here we are writing to the document
+  pdfDoc.text("Hello World");
+  //here we close the stream and the response will be sent
+  pdfDoc.end();
+};
 ```
 
 ## Section 21 - Adding pagination
 
+Using mongoose we can do pagination like this:
+
+```javascript
+Product.find()
+  .countDocuments()
+  .then((numProducts) => {
+    totalItems = numProducts;
+
+    return Product.find()
+      .skip((page - 1) * ITEMS_PER_PAGE) //here we are going to skip some items
+      .limit(ITEMS_PER_PAGE); //here we limit the number of items that will be fetched
+  });
+```
+
+## Section 22 - Understanding async requests
