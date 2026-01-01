@@ -586,5 +586,3 @@ Product.find()
       .limit(ITEMS_PER_PAGE); //here we limit the number of items that will be fetched
   });
 ```
-
-## Section 22 - Understanding async requests
