@@ -50,23 +50,33 @@ app.use(csrfProtection);
 app.use(flash());
 
 app.use((req, res, next) => {
+  //for every view we render, we will have these two variables available
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
+app.use((req, res, next) => {
+  //inside sync code, Express detect this handle the exception by executing the error handling middleware for it
+  //throw new Error("Sync dummy"); //TODO: Remove this line
   if (!req.session.user) {
     return next();
   }
 
   User.findById(req.session.user._id)
     .then((user) => {
+      //inside async code with then() and catch() we need to pass the next with the error for us to handle it
+      //throw new Error("Sync dummy"); //TODO: Remove this line
+      if (!user) {
+        return next();
+      }
+
       req.user = user;
       next();
     })
-    .catch((err) => console.log(err.red));
-});
-
-app.use((req, res, next) => {
-  //for every view we render, we will have these two variables available
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
+    .catch((err) => {
+      next(new Error(err));
+    });
 });
 
 //here we change to use the admin routes for any route that starts with /admin
@@ -74,7 +84,18 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+app.get("/500", errorController.get500);
 app.use(errorController.get404);
+
+//express will check first this middleware with 4 arguments, the first one is the error and then we have the usual 3
+//here we can handle the error the way we want. If we have more than 1 of these, it will execute from top to bottom
+app.use((error, req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "Error!",
+    path: "/500",
+    isAuthenticated: req.session.isLoggedIn,
+  });
+});
 
 //connect to MongoDB using mongoose
 //mongoose will manage the connection pool for us

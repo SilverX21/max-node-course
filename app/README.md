@@ -432,3 +432,54 @@ check("email")
     return true;
   });
 ```
+
+## Section 19 - Error Handling
+
+Handling error is one of the most important aspects in programming.
+
+We can have error handling middleware like this that Express has:
+
+```javascript
+app.use((error, req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "Error!",
+    path: "/500",
+    isAuthenticated: req.session.isLoggedIn,
+  });
+});
+```
+
+In here we have 4 arguments, were the first is the error that was thrown and the other 3 are the same ones (request, response and next)
+Express will first execute this one and then the other middlewares. If we have multiple error handlers, they will be executed from top to bottom.
+
+Also, look at the following code:
+
+```javascript
+app.use((req, res, next) => {
+  //inside sync code, Express detect this handle the exception by executing the error handling middleware for it
+  //throw new Error("Sync dummy"); //TODO: Remove this line
+  if (!req.session.user) {
+    return next();
+  }
+
+  User.findById(req.session.user._id)
+    .then((user) => {
+      //inside async code with then() and catch() we need to pass the next with the error for us to handle it
+      //throw new Error("Sync dummy"); //TODO: Remove this line
+      if (!user) {
+        return next();
+      }
+
+      req.user = user;
+      next();
+    })
+    .catch((err) => {
+      next(new Error(err));
+    });
+});
+```
+
+If we throw an error inside synchronous code, Express detect this handle the exception by executing the error handling middleware for it, like
+we have above.
+
+If we throw an exception inside asynchronous code, inside then() and catch(), we need to pass the next with the error for us to handle it
