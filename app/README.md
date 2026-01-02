@@ -586,3 +586,96 @@ Product.find()
       .limit(ITEMS_PER_PAGE); //here we limit the number of items that will be fetched
   });
 ```
+
+## Section 23 - Adding payments
+
+Here we have a section dedicated to have payments with Stripe
+
+For that, we need to use the Stripe.js scripts and packages. - package: `npm install --save stripe` - for the front end part, we need to access the stripe docs to use the script that they have [Stripe.js Documentation](https://docs.stripe.com/js)
+and [Node.js Package Documentation](https://docs.stripe.com/get-started/development-environment?lang=node)
+
+Now let's get to the coding part!
+
+First let's setup the backend to work with stripe, for that check the docs on how to work with the API:
+
+```javascript
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+exports.getCheckout = (req, res, next) => {
+  let products;
+  let total = 0;
+
+  req.user
+    .populate("cart.items.productId")
+    .then((user) => {
+      products = user.cart.items;
+      total = 0;
+
+      products.forEach((p) => {
+        total += p.quantity * p.productId.price;
+      });
+
+      //this is the request body we need to pass to stripe to setup the request for the payment and to create the session
+      const lineItems = products.map((p) => ({
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: p.productId.title,
+            description: p.productId.description || "",
+          },
+          unit_amount: Math.round(p.productId.price * 100),
+        },
+        quantity: p.quantity,
+      }));
+
+      return stripe.checkout.sessions.create({
+        payment_method_types: ["card"], //here we say we accept credit card payments
+        line_items: lineItems,
+        mode: "payment",
+        success_url:
+          req.protocol + "://" + req.get("host") + "/checkout/success",
+        cancel_url: req.protocol + "://" + req.get("host") + "/checkout/cancel",
+      });
+    })
+    .then((session) => {
+      console.log("the session was created successfully");
+      console.log(session);
+
+      res.render("shop/checkout", {
+        path: "/checkout",
+        pageTitle: "Checkout",
+        products: products,
+        totalSum: total,
+        sessionId: session.id,
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+```
+
+After setting up the backend, we need to setup the front end like this:
+
+```html
+<div class="centered">
+  <button id="order-btn" class="btn">Order</button>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    var stripe = Stripe("STRIPE_PUBLISHED_KEY");
+    var orderBtn = document.getElementById("order-btn");
+
+    orderBtn.addEventListener("click", function (event) {
+      stripe.redirectToCheckout({
+        sessionId: "<%= sessionId %>",
+      });
+    });
+  </script>
+</div>
+```
+
+We need to setup this HTML to work with our stripe API.
+
+NOTE: Watch out with script blockers so you can access the stripe payment UI 🥸
