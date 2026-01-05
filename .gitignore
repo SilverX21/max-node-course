@@ -1,3 +1,24 @@
 /app/node_modules/
+/api/node_modules/
 .idea/*
 /app/.idea/*
+
+# SPA
+/spa/node_modules/
+/spa/.env
+# testing
+/spa/coverage
+
+# production
+/spa/build
+
+# misc
+/spa/.DS_Store
+/spa/.env.local
+/spa/.env.development.local
+/spa/.env.test.local
+/spa/.env.production.local
+
+/spa/npm-debug.log*
+/spa/yarn-debug.log*
+/spa/yarn-error.log*

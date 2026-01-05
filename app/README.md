@@ -26,7 +26,7 @@ It will generate the following file: `eslint.config.mjs`
 
 Then, let's add a new script to the package.json:
 
-```
+```json
 "lint": "eslint"
 ```
 
