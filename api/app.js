@@ -1,35 +1,35 @@
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
+const { globalErrorHandler } = require("./middleware/error");
 const colors = require("colors");
 const feedRoutes = require("./routes/feed");
+const authRoutes = require("./routes/auth");
 const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerDocument = require(path.join(__dirname, "swagger-output.json"));
+const mongoose = require("mongoose");
+const upload = require("../api/middleware/file");
 
 const app = express();
 
+const PORT = process.env.PORT || 8080;
+
 //here we will receive the data as "application/json"
 app.use(bodyParser.json());
+//here we use multer to extract a single file from the request
+app.use(upload.single("image"));
 
-const swaggerOptions = {
-  swaggerDefinition: {
-    myapi: "1.0",
-    info: {
-      title: "API Documentation",
-      version: "1.0.0",
-      description: "Max Node.js Course - API V1",
-    },
-    servers: [
-      {
-        url: "http://localhost:8080",
-      },
-    ],
-  },
-  apis: ["./routes/*.js"], // files containing annotations as above
-};
+//here we will staticly serve the images folder
+app.use("/images", express.static(path.join(__dirname, "images")));
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+//swagger documentation
+// swagger documentation (robust)
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, { explorer: true })
+);
 
 //This is the CORS policy
 app.use((req, res, next) => {
@@ -42,8 +42,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/feed", feedRoutes);
+app.get("/swagger.json", (req, res) => res.json(swaggerDocument));
 
-app.listen(8080, () => {
-  console.log("API listening on port 8080".bgBlue);
+app.use("/feed", feedRoutes);
+app.use("/auth", authRoutes);
+
+//global error handling
+app.use(globalErrorHandler);
+
+app.listen(PORT, () => {
+  console.log(`API listening on port ${PORT}`.bgBlue);
 });
+
+mongoose
+  .connect(process.env.MONGO_DB_CONNECTION_STRING)
+  .then((result) => {
+    console.log("Connected to MongoDb instance".bgMagenta);
+  })
+  .catch((err) => console.log(err));
