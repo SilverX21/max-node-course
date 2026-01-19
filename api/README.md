@@ -132,6 +132,5 @@ Then we just need to use this in our routes:
 const isAuth = require("../middleware/is-auth");
 
 //then we use it like this, before our validation and our controller
-
-
+router.get("/post/:postId", isAuth, feedController.getPost);
 ```

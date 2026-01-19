@@ -50,13 +50,26 @@ app.use("/auth", authRoutes);
 //global error handling
 app.use(globalErrorHandler);
 
-app.listen(PORT, () => {
-  console.log(`API listening on port ${PORT}`.bgBlue);
-});
-
 mongoose
   .connect(process.env.MONGO_DB_CONNECTION_STRING)
   .then((result) => {
     console.log("Connected to MongoDb instance".bgMagenta);
+
+    const server = app.listen(PORT, () => {
+      console.log(`API listening on port ${PORT}`.bgBlue);
+    });
+
+    //here we will require our socke.io server
+    const { Server } = require("socket.io");
+
+    const io = new Server({
+      cors: { origin: "http://localhost:3000" },
+    });
+
+    io.on("connection", (socket) => {
+      console.log(`Server we socket: ${socket.id}`);
+
+      socket.on("join", (room) => socket.join(room));
+    });
   })
   .catch((err) => console.log(err));
