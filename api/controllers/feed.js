@@ -15,12 +15,13 @@ exports.getPosts = async (req, res, next) => {
   try {
     //here we just prepend the methods call like this with await, we will receive the result and not the promise
     const totalItems = await Post.find().countDocuments();
+
     const posts = await Post.find()
       .populate("creator")
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
-    if (posts.length == 0) {
+    if (posts.length === 0) {
       const error = new Error("No posts found");
       error.statusCode = 404;
       throw error;
@@ -36,8 +37,8 @@ exports.getPosts = async (req, res, next) => {
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
-      next(error);
     }
+    next(error);
   }
 };
 

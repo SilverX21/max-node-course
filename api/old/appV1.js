@@ -10,9 +10,6 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require(path.join(__dirname, "swagger-output.json"));
 const mongoose = require("mongoose");
 const upload = require("../api/middleware/file");
-const { graphqlHTTP } = require("express-graphql");
-const graphqlSchema = require("./graphql/schema");
-const graphqlResolver = require("./graphql/resolvers");
 
 const app = express();
 
@@ -47,18 +44,8 @@ app.use((req, res, next) => {
 
 app.get("/swagger.json", (req, res) => res.json(swaggerDocument));
 
-// app.use("/feed", feedRoutes);
-// app.use("/auth", authRoutes);
-
-//here we use the graphql endpoint
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema: graphqlSchema, //here we import the schema we define for our GraphQL API
-    rootValue: graphqlResolver, //here we import the resolvers that contain the functions to handle the queries and mutations
-    graphiql: true, //this enables the graphiql interface
-  })
-);
+app.use("/feed", feedRoutes);
+app.use("/auth", authRoutes);
 
 //global error handling
 app.use(globalErrorHandler);
@@ -70,6 +57,19 @@ mongoose
 
     const server = app.listen(PORT, () => {
       console.log(`API listening on port ${PORT}`.bgBlue);
+    });
+
+    //here we will require our socke.io server
+    const { Server } = require("socket.io");
+
+    const io = new Server({
+      cors: { origin: "http://localhost:3000" },
+    });
+
+    io.on("connection", (socket) => {
+      console.log(`Server we socket: ${socket.id}`);
+
+      socket.on("join", (room) => socket.join(room));
     });
   })
   .catch((err) => console.log(err));

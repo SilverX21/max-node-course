@@ -134,3 +134,109 @@ const isAuth = require("../middleware/is-auth");
 //then we use it like this, before our validation and our controller
 router.get("/post/:postId", isAuth, feedController.getPost);
 ```
+
+## GraphQL
+
+In this part here, we will use GraphQL for the requests.
+First, let's remove the routes, as we won't be needing them anymore 👋
+
+1. Setup
+
+Let's then install the following packages:
+
+- `npm install --save graphql`
+- `npm install --save express-graphql`
+
+Let's now do the following:
+
+- First we create a folder with 2 files: `schema.js` and `resolver.js`
+  - `schema.js` will have the schemas for our requests
+
+    ```javascript
+    const { buildSchema } = require("graphql");
+
+    //Here we define the GraphQL schema
+    //type is used to define the structure of the data
+    //RootQuery is the entry point for queries
+    //for example, the hello query returns a String type which is required (!)
+    module.exports = buildSchema(`
+        type TestData {
+            text: String!
+            views: Int!}
+    
+        type RootQuery {
+            hello: TestData!
+        }
+    
+        schema {
+            mutation:
+        }    
+    `);
+    ```
+
+  - `resolver.js` will have our functions that will implement those schemas
+
+    ```javascript
+    module.exports = {
+      //The hello resolver function returns a TestData object
+      hello() {
+        return { text: "Hello, world!", views: 2026 };
+      },
+    };
+    ```
+
+Given we are using Express.js, we will setup our application like this in our `app.js`:
+
+```javascript
+const { graphqlHTTP } = require("express-graphql");
+const graphqlSchema = require("./graphql/schema");
+const graphqlResolver = require("./graphql/resolvers");
+
+//here we use the graphql endpoint
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: graphqlSchema, //here we import the schema we define for our GraphQL API
+    rootValue: graphqlResolver, //here we import the resolvers that contain the functions to handle the queries and mutations
+    graphiql: true, //this enables the graphiql interface
+  })
+);
+```
+
+2. Testing
+
+As you can see above, we enabled our graphQL client with `graphiql: true`. This will create a client where we can test our
+GraphQL endpoints via: `http://localhost:<YOUR_PORT>/graphql`
+
+3. Validation
+
+To add validation, let's install the following package: `npm install --save validator`
+
+Then, we can use it in the resolvers like this:
+
+```javascript
+createUser: async function ({ userInput }, req) {
+    const errors = [];
+
+    if (!validator.isEmail(userInput.email)) {
+      errors.push({ message: "Email is invalid." });
+    }
+    if (
+      validator.isEmpty(userInput.password) ||
+      !validator.isLength(userInput.password, { min: 5 })
+    ) {
+      errors.push({ message: "Password too short!" });
+    }
+    if (errors.length > 0) {
+      const error = new Error("Invalid input.");
+      //   error.data = errors;
+      //   error.statusCode = 422;
+      throw error;
+    }
+
+    //...rest of the code 🚀
+  }
+```
+
+We can use this package like this, like we have in the routes, but in this case, we put them directly in the resolver to take
+care of the validation 💪
