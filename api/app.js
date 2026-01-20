@@ -13,6 +13,8 @@ const upload = require("../api/middleware/file");
 const { graphqlHTTP } = require("express-graphql");
 const graphqlSchema = require("./graphql/schema");
 const graphqlResolver = require("./graphql/resolvers");
+const { formatError } = require("graphql");
+const auth = require("./middleware/auth");
 
 const app = express();
 
@@ -31,7 +33,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(
   "/api-docs",
   swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument, { explorer: true })
+  swaggerUi.setup(swaggerDocument, { explorer: true }),
 );
 
 //This is the CORS policy
@@ -39,9 +41,14 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); //here we allow any front end to make a request to our API
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE" //there are the methods types that can access make requests to our API
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE", //there are the methods types that can access make requests to our API
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); //this enables content and auth headers in the requests
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); //we send a 200 response to the preflight request
+  }
+
   next();
 });
 
@@ -50,6 +57,9 @@ app.get("/swagger.json", (req, res) => res.json(swaggerDocument));
 // app.use("/feed", feedRoutes);
 // app.use("/auth", authRoutes);
 
+//Here we add the auth middleware
+app.use(auth); //this will check for the auth token in each request
+
 //here we use the graphql endpoint
 app.use(
   "/graphql",
@@ -57,7 +67,19 @@ app.use(
     schema: graphqlSchema, //here we import the schema we define for our GraphQL API
     rootValue: graphqlResolver, //here we import the resolvers that contain the functions to handle the queries and mutations
     graphiql: true, //this enables the graphiql interface
-  })
+    customFormatErrorFn(err) {
+      //in this function we can format the errors before sending them to the client
+      if (!err.originalError) {
+        return err;
+      }
+
+      const data = err.originalError.data;
+      const message = err.message || "An error occurred.";
+      const code = err.originalError.code || 500;
+
+      return { message: message, status: code, data: data };
+    },
+  }),
 );
 
 //global error handling
