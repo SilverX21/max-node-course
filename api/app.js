@@ -15,6 +15,7 @@ const graphqlSchema = require("./graphql/schema");
 const graphqlResolver = require("./graphql/resolvers");
 const { formatError } = require("graphql");
 const auth = require("./middleware/auth");
+const fs = require("fs");
 
 const app = express();
 
@@ -60,6 +61,25 @@ app.get("/swagger.json", (req, res) => res.json(swaggerDocument));
 //Here we add the auth middleware
 app.use(auth); //this will check for the auth token in each request
 
+//here we will handle the addition of images
+app.put("/post-image", auth, (req, res, next) => {
+  if (!req.isAuth) {
+    throw new Error("Not authenticated!");
+  }
+
+  if (!req.file) {
+    return res.status(200).json({ message: "No file provided!" });
+  }
+
+  if (req.body.oldPath) {
+    clearImage(req.body.oldPath);
+  }
+
+  return res
+    .status(201)
+    .json({ message: "File stored.", filePath: req.file.path });
+});
+
 //here we use the graphql endpoint
 app.use(
   "/graphql",
@@ -95,3 +115,8 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
+
+const clearImage = (filePath) => {
+  filePath = path.join(__dirname, "..", filePath);
+  fs.unlink(filePath, (err) => console.log(err));
+};

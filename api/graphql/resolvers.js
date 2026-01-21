@@ -132,13 +132,69 @@ module.exports = {
 
     const createdPost = await post.save();
     user.posts.push(createdPost);
-
+    await user.save();
     //graphQL doesn't understand dates, so we need to convert them to string
     return {
       ...createdPost._doc,
       _id: createdPost._id.toString(),
       createdAt: createdPost.createdAt.toISOString(),
       updatedAt: createdPost.updatedAt.toISOString(),
+    };
+  },
+  posts: async function ({ page, perPage }, req) {
+    if (!req.isAuth) {
+      const error = new Error("Not authenticated!");
+      error.code = 401;
+      throw error;
+    }
+
+    if (!page) {
+      page = 1;
+    }
+
+    if (!perPage) {
+      perPage = 2;
+    }
+
+    const totalPosts = await Post.find().countDocuments();
+    const posts = await Post.find()
+      .populate("creator")
+      .skip((page - 1) * perPage) //here we do the pagination
+      .limit(perPage)
+      .sort({ createdAt: -1 }); //sort by createdAt descending
+
+    return {
+      posts: posts.map((p) => {
+        return {
+          ...p._doc,
+          _id: p._id.toString(),
+          createdAt: p.createdAt.toISOString(),
+          updatedAt: p.updatedAt.toISOString(),
+        };
+      }),
+      totalPosts: totalPosts,
+    };
+  },
+  post: async function ({ id }, req) {
+    if (!req.isAuth) {
+      const error = new Error("Not authenticated!");
+      error.code = 401;
+      throw error;
+    }
+
+    const post = await Post.findById(id).populate("creator");
+
+    if (!post) {
+      const error = new Error("No post found!");
+      error.code = 404;
+      throw error;
+    }
+
+    return {
+      ...post._doc,
+      _id: post._id.toString(),
+      createdAt: post.createdAt.toISOString(),
+      updatedAt: post.updatedAt.toISOString(),
     };
   },
 };
