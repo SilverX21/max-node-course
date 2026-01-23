@@ -15,7 +15,7 @@ const graphqlSchema = require("./graphql/schema");
 const graphqlResolver = require("./graphql/resolvers");
 const { formatError } = require("graphql");
 const auth = require("./middleware/auth");
-const fs = require("fs");
+const clearImage = require("./util/file");
 
 const app = express();
 
@@ -115,8 +115,3 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
-
-const clearImage = (filePath) => {
-  filePath = path.join(__dirname, "..", filePath);
-  fs.unlink(filePath, (err) => console.log(err));
-};
