@@ -136,7 +136,7 @@ const mongoConnect = (callback) => {
   console.log("MongoDB connecting...");
   console.log(
     ".env variable for connection string: " +
-      process.env.MONGO_DB_CONNECTION_STRING
+      process.env.MONGO_DB_CONNECTION_STRING,
   );
 
   MongoClient.connect(process.env.MONGO_DB_CONNECTION_STRING)
@@ -197,7 +197,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: store, //here we pass the store instance to store sessions in MongoDB
-  })
+  }),
 );
 ```
 
@@ -528,7 +528,7 @@ const fileFilter = (req, file, cb) => {
 //here we pass the filStorage to have the options we defined above
 //the fileFilter options will let us filter which types of files can be uploaded
 app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image"),
 );
 ```
 
@@ -679,3 +679,85 @@ After setting up the backend, we need to setup the front end like this:
 We need to setup this HTML to work with our stripe API.
 
 NOTE: Watch out with script blockers so you can access the stripe payment UI 🥸
+
+## 24. Securing headers - Helmet
+
+Helmet is a package that adds a couple of headers to a request in order to follow best practices and to avoid certain attacks.
+
+For that, let's start by installing the following package: `npm install --save helmet`
+
+Now, the onoy thing we need to do is to user helmet in our app.js like this:
+
+```javascript
+const helmet = require("helmet");
+
+app.use(helmet());
+```
+
+## 25. Compressing assets - Compression
+
+We can use the package `compression`to compress image size, and some other assets.
+
+Let's install the package: `npm install --save compression`
+
+Then, we can use it like this:
+
+```javascript
+const compression = require("compression");
+
+//this will reduce the size of the assets that are loaded in the app
+app.use(compression());
+```
+
+## 26. Logging - Morgan
+
+Morgan is a package that can introduce http request logging in our application.
+We can add it like this: `npm isntall --save morgan`
+
+Then we add it to our application like this:
+
+```javascript
+const morgan = require("morgan");
+
+//morgan will log our http requests so we can track what is done in our application
+app.use(morgan("combined"));
+```
+
+The code above will add loggs to our console, but if we want to add to a file, we can do this:
+
+```javascript
+//here we configure morgan to add a file for logging
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }, //the "a" flag means "append" - we want to append new logs to the file
+);
+
+//morgan will log our http requests so we can track what is done in our application
+app.use(morgan("combined", { stream: accessLogStream })); //here we add the stream option to tell morgan to use our file
+```
+
+## 27. Setting up SSL Server
+
+For us to create an SSL certificate (so we can have HTTPS), we need a certificate.
+
+We can do that by using `openssl`, using the following comand: `openssl req -nodes -new -x509 -keyout server.key -out server.cert`
+We have to answer some questions, one of them `Common Name` must be `localhost`. If we don't do this, it won't work for our local development.
+
+If we wanted to have this working on a hosting server in the net, we would need to have it like our DNS (https://silverx21.com, for example).
+
+The server.key will need to stay in our server and the server.cert is what we need to send to our client
+
+After that, we need to do some tweaks in our code:
+
+```javascript
+const https = require("https");
+
+//here we will setup our https  by getting the private key and the certificate
+const privateKey = fs.readFileSync("server.key");
+const certificate = fs.readFileSync("server.cert");
+
+//where we do app.listen(), we need to update it like this
+//we will replace app with https.createServer()
+//here we create the https server using our private key and certificate
+https.createServer({ key: privateKey, cert: certificate }).listen(3000);
+```
