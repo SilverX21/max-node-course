@@ -3,3 +3,4 @@
 .idea/*
 /app/.idea/*
 /app/*.log
+/tests/node_modules/
