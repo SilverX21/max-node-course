@@ -1,7 +1,13 @@
 /app/node_modules/
+/app/.env
 /api/node_modules/
+/api/.env
 .idea/*
 /app/.idea/*
 /app/*.log
+/app/*.cert
+/app/*.key
 /tests/node_modules/
+/tests/.env
 /nextgenjs/node_modules/
+/nextgenjs/.env
