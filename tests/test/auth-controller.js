@@ -12,9 +12,7 @@ describe("Auth Controller", function (done) {
   before(function (done) {
     //here we connect to a test database so we don't mess with the production one
     mongoose
-      .connect(
-        "mongodb+srv://silver21guitar02_db_user:bFYgz2b2oXSm2X4r@silvercluster.4hbkqav.mongodb.net/test-messages?appName=SilverCluster",
-      )
+      .connect(process.env.MONGO_DB_TEST_DB)
       .then((result) => {
         const user = new User({
           email: "test@test.com",
