@@ -1,13 +1,37 @@
-/app/node_modules/
-/app/.env
+.idea/*
+.vscode/*
+
+# api folder
 /api/node_modules/
 /api/.env
-.idea/*
+
+# app folder
+/app/node_modules/
+/app/.env
 /app/.idea/*
 /app/*.log
 /app/*.cert
 /app/*.key
+
+# tests folder
 /tests/node_modules/
 /tests/.env
+
+# nexthenjs folder
 /nextgenjs/node_modules/
 /nextgenjs/.env
+
+# typescript folder
+/typescript/node_modules
+/typescript/*.d.ts
+/typescript/*.d.ts.map
+/typescript/*.js.map
+/typescript/*.js
+
+# node-ts folder
+/node-ts/node_modules/
+/node-ts/.env
+/node-ts/*.d.ts
+/node-ts/*.d.ts.map
+/node-ts/*.js.map
+/node-ts/*.js

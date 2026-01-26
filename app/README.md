@@ -32,11 +32,11 @@ Then, let's add a new script to the package.json:
 
 This will output in the terminal errors, problems and other warnings of your application
 
-Check the docs for `eslint`: https://eslint.org/docs/latest/use/configure/
+Check the docs for `eslint`: <https://eslint.org/docs/latest/use/configure/>
 
 ### 0.2 Prettier
 
-For Prettier, you can check the docs here for the integration with linters: [ESLint setup](https://prettier.io/docs/integrating-with-linters)
+For Prettier, you can check the docs here for the integration with linters: [Prettier setup](https://prettier.io/docs/integrating-with-linters)
 
 To integrate with `eslint` we can first install these packages:
 
@@ -55,7 +55,7 @@ To integrate with `eslint` we can first install these packages:
 }
 ```
 
-This will run every time you run the `npm start` command, so if you need to do something everytime you run the project, you can add it here 👌 3. If we add another line inside the scripts section:
+This will run every time you run the `npm start` command, so if you need to do something every time you run the project, you can add it here 👌 3. If we add another line inside the scripts section:
 
 ```json
 "scripts": {
@@ -66,15 +66,15 @@ This will run every time you run the `npm start` command, so if you need to do s
 
 If you now needed to start using the `start-server` script, you should do something like this: `npm run start-server`
 
-4. If we want to install a package from `npm` you can run the following command: `npm install package_name`
-5. There are two types of packages: production dependencies, that we use in production, and development dependencies, that we only use for the development. For this case, we are going to install `nodemon`.
+1. If we want to install a package from `npm` you can run the following command: `npm install package_name`
+2. There are two types of packages: production dependencies, that we use in production, and development dependencies, that we only use for the development. For this case, we are going to install `nodemon`.
 
    This package is a development dependency, so it will only be used during the development phase (this package restarts the server every time we update our code, instead of running the commands manually, we can use this package to restart it).
    In this case, we need to add `--save-dev` at the end, something like this: `npm install nodemon --save-dev`. This way the npm can know which of these packages is for production 🚀
    If we installed it as `npm install nodemon --save`, it would install it as a production package.
    If we installed it as `npm install nodemon -g`, it would install it globally.
 
-6. If we want to start using nodemon, we can change the `start` script in the `package.json` file to use it:
+3. If we want to start using nodemon, we can change the `start` script in the `package.json` file to use it:
 
 ```json
 "scripts": {
@@ -82,7 +82,7 @@ If you now needed to start using the `start-server` script, you should do someth
 }
 ```
 
-7. To use the debugger with nodemon, you can do the following:
+1. To use the debugger with nodemon, you can do the following:
 
    ![setting debugger options](/images/1.set%20debugger%20options.png)
 
@@ -97,33 +97,33 @@ If you now needed to start using the `start-server` script, you should do someth
 
    This will enable the VS Code to restart the server, using nodemon.
    NOTE: There could be an error that it fails. This is due to nodemon not being installed globally, so we need to install it like this: `npm install nodemon -g`
-   We also added the option `console` to the options so we could have the loggs in the integrated terminal off VS Code.
+   We also added the option `console` to the options so we could have the logs in the integrated terminal off VS Code.
 
 ## Section 5 - Working with Express.js
 
-8. To install Express, we just need to run the command `npm install --save express`. We use the `--save` because this will be on production 🚀
-9. Let's also install the body-parser package to parse requests from the front end: `npm install --save body-parser`
+1. To install Express, we just need to run the command `npm install --save express`. We use the `--save` because this will be on production 🚀
+2. Let's also install the body-parser package to parse requests from the front end: `npm install --save body-parser`
 
 ## Section 6 - Working with dynamic content & adding templating engines
 
-10. let's install the folllwing: `npm install --save ejs pug express-handlebars`
-    Here we have some of the templates for dynamic content using html 💪
+1. let's install the following: `npm install --save ejs pug express-handlebars`
+   Here we have some of the templates for dynamic content using html 💪
 
 ## Section 9 - Sql Introduction
 
 Here we will install MySQL and work with it using node!
 
-11. let's install `npm install --save mysql2`
+1. let's install `npm install --save mysql2`
 
 ## Section 10 - Sequelize
 
-12. let's install the package: `npm install --save sequelize`
-    Sequelize will require `mysql2` to be installed before being installed
+1. let's install the package: `npm install --save sequelize`
+   Sequelize will require `mysql2` to be installed before being installed
 
 ## Section 12 - MongoDb
 
-13. let's install the package: `npm install --save mongodb`
-    then let's set it up like this:
+1. let's install the package: `npm install --save mongodb`
+   then let's set it up like this:
 
 ```javascript
 const mongodb = require("mongodb");
@@ -134,10 +134,7 @@ let _db;
 
 const mongoConnect = (callback) => {
   console.log("MongoDB connecting...");
-  console.log(
-    ".env variable for connection string: " +
-      process.env.MONGO_DB_CONNECTION_STRING,
-  );
+  console.log(".env variable for connection string: " + process.env.MONGO_DB_CONNECTION_STRING);
 
   MongoClient.connect(process.env.MONGO_DB_CONNECTION_STRING)
     .then((client) => {
@@ -163,12 +160,12 @@ exports.mongoConnect = mongoConnect;
 exports.getDb = getDb;
 ```
 
-14. For the connection string, we will need to have a .env file for best practices, to use this approach, we need to install this package: `npm install dotenv`
-    Then we need to import it in the app.js file for global usage: `require("dotenv").config()`
+1. For the connection string, we will need to have a .env file for best practices, to use this approach, we need to install this package: `npm install dotenv`
+   Then we need to import it in the app.js file for global usage: `require("dotenv").config()`
 
 ## Section 13 - Working with Mongoose
 
-15. To add Mongoose to our project, we need to install the package `npm install --save mongoose`
+1. To add Mongoose to our project, we need to install the package `npm install --save mongoose`
 
 Mongoose is an ODM (Object Document Mapper), it can pick up our documents and help us to focus on our data instead of focusing in our queries
 
@@ -178,7 +175,7 @@ Let's start by installing this package: `npm install --save express-session`
 
 This will add express middleware for session management
 
-16. Let's use the database to help us to have our session data stored. We are using MongoDb, so we can use the following package: `npm install --save connect-mongodb-session`
+1. Let's use the database to help us to have our session data stored. We are using MongoDb, so we can use the following package: `npm install --save connect-mongodb-session`
 
 We can create a session store for MongoDB like this:
 
@@ -203,12 +200,12 @@ app.use(
 
 ## Section 15 - Adding Authentication
 
-17. Let's start by adding this package: `npm install --save bcryptjs`
+1. Let's start by adding this package: `npm install --save bcryptjs`
 
 This package can help us encrypt some data, in this case, we will need to encrypt passwords in order to not have security flaws in our code 🔑
 
-18. We can use middleware to protect our routes from being accessed without the required user rights.
-    For that, we can create a middleware (this way it is more scalable). We can do it like this:
+1. We can use middleware to protect our routes from being accessed without the required user rights.
+   For that, we can create a middleware (this way it is more scalable). We can do it like this:
 
 ```javascript
 module.exports = (req, res, next) => {
@@ -231,8 +228,8 @@ router.get("/add-product", isAuth, adminController.getAddProduct);
 
 The middleware is executed from left to right, if the `isAuth` one doesn't call the `next()` function, it won't let the next middleware to execute 🚀
 
-19. To protect us against CSRF attacks, we can use the following package: `npm install --save csurf`
-    This package can generate tokens to embed in our pages that change the user state, this way we can protect our requests and the user as well.
+1. To protect us against CSRF attacks, we can use the following package: `npm install --save csurf`
+   This package can generate tokens to embed in our pages that change the user state, this way we can protect our requests and the user as well.
 
 ```javascript
 const csrf = require("csurf");
@@ -264,7 +261,7 @@ In the views, when we do post requests (in forms) we can add something like this
 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 ```
 
-20. If we want to pass some data that needs to be in every request to the views, instead of duplicating the code, we can do something like this:
+1. If we want to pass some data that needs to be in every request to the views, instead of duplicating the code, we can do something like this:
 
 ```javascript
 //...after the code for csrf and auth
@@ -276,8 +273,8 @@ app.use((req, res, next) => {
 });
 ```
 
-21. For us to send messages to the client (user), we need to pass in the render of the pages those messages.
-22. For that, we can use the package `npm install --save connect-flash` to add that functionality to it and help us do that like this:
+1. For us to send messages to the client (user), we need to pass in the render of the pages those messages.
+2. For that, we can use the package `npm install --save connect-flash` to add that functionality to it and help us do that like this:
 
 ```javascript
 //...code for the session
@@ -302,9 +299,9 @@ res.render("auth/login", {
 
 ## Section 16 - Sending Emails
 
-23. In this section we will introduce mail sending, we are going to use SendGrid as a mail server 📧
+1. In this section we will introduce mail sending, we are going to use SendGrid as a mail server 📧
 
-    For the email sending, we can use these packages: `npm install --save nodemailer`
+   For the email sending, we can use these packages: `npm install --save nodemailer`
 
 _NOTE_: Instead of following the sendgrid mail settings, we are using google app. For that, we can follow this to set it up: [Google App Setup](https://www.youtube.com/watch?v=cqdAS49RthQ)
 
@@ -337,7 +334,7 @@ transporter
 
 Here we will be adding some safety features to our application.
 
-24. Let's add a password reset feature, for this, we need to do the following:
+1. Let's add a password reset feature, for this, we need to do the following:
 
 ```javascript
 const { randomBytes } = require("node:crypto");
@@ -384,7 +381,7 @@ _NOTE_: For crypto we needed to use an updated version of node, for that, we use
 
 Here we will focus on server side validation! 🚀
 
-25. Let's install the package `npm install express-validator`, this is an express validator, we can check the documentation here: [Express Validator documentation](https://express-validator.github.io/docs/)
+1. Let's install the package `npm install express-validator`, this is an express validator, we can check the documentation here: [Express Validator documentation](https://express-validator.github.io/docs/)
 
 We can set it up in the routes files, this way it's cleaner! Here's an example:
 
@@ -393,17 +390,13 @@ We can set it up in the routes files, this way it's cleaner! Here's an example:
 const { check } = require("express-validator");
 //here we can pass the name of the field we want to validate and then use the package methods to do some checking
 //we can also pass a custom message using .withMessage() -> it will refer to the validation before
-router.post(
-  "/signup",
-  check("email").isEmail().withMessage("Please enter a valid email"),
-  authController.postSignup
-);
+router.post("/signup", check("email").isEmail().withMessage("Please enter a valid email"), authController.postSignup);
 
 //... in the controller
 const { validationResult } = require("express-validator");
 
 exports.postSignup = (req, res, next) => {
-  onst errors = validationResult(req);
+  const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     console.log(errors.array());
@@ -512,11 +505,7 @@ const fileStorage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
+  if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
     cb(null, true);
   } else {
     cb(null, false);
@@ -527,9 +516,7 @@ const fileFilter = (req, file, cb) => {
 //the dest property refers to "destination", it will basically store the image in a folder called "images"
 //here we pass the filStorage to have the options we defined above
 //the fileFilter options will let us filter which types of files can be uploaded
-app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image"),
-);
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single("image"));
 ```
 
 As you can see, we can have multer have a defined way to store the images we pass through our requests from the forms
@@ -544,7 +531,7 @@ res.setHeader("Content-Disposition", `inline; filename="${invoiceName}"`);
 file.pipe(res);
 ```
 
-This will write the data into the response object and send it to the user, this data will be writen chunk by chunk. 🚀
+This will write the data into the response object and send it to the user, this data will be written chunk by chunk. 🚀
 
 We can also create a .pdf file on the fly, for that we can use this package: `npm install --save pdfkit`.
 To use it, we can do something like this:
@@ -632,8 +619,7 @@ exports.getCheckout = (req, res, next) => {
         payment_method_types: ["card"], //here we say we accept credit card payments
         line_items: lineItems,
         mode: "payment",
-        success_url:
-          req.protocol + "://" + req.get("host") + "/checkout/success",
+        success_url: req.protocol + "://" + req.get("host") + "/checkout/success",
         cancel_url: req.protocol + "://" + req.get("host") + "/checkout/cancel",
       });
     })
@@ -661,7 +647,11 @@ After setting up the backend, we need to setup the front end like this:
 
 ```html
 <div class="centered">
-  <button id="order-btn" class="btn">Order</button>
+  <button
+    id="order-btn"
+    class="btn">
+    Order
+  </button>
   <script src="https://js.stripe.com/v3/"></script>
   <script>
     var stripe = Stripe("STRIPE_PUBLISHED_KEY");
@@ -686,7 +676,7 @@ Helmet is a package that adds a couple of headers to a request in order to follo
 
 For that, let's start by installing the following package: `npm install --save helmet`
 
-Now, the onoy thing we need to do is to user helmet in our app.js like this:
+Now, the only thing we need to do is to user helmet in our app.js like this:
 
 ```javascript
 const helmet = require("helmet");
@@ -712,7 +702,7 @@ app.use(compression());
 ## 26. Logging - Morgan
 
 Morgan is a package that can introduce http request logging in our application.
-We can add it like this: `npm isntall --save morgan`
+We can add it like this: `npm install --save morgan`
 
 Then we add it to our application like this:
 
@@ -723,7 +713,7 @@ const morgan = require("morgan");
 app.use(morgan("combined"));
 ```
 
-The code above will add loggs to our console, but if we want to add to a file, we can do this:
+The code above will add logs to our console, but if we want to add to a file, we can do this:
 
 ```javascript
 //here we configure morgan to add a file for logging
@@ -740,10 +730,10 @@ app.use(morgan("combined", { stream: accessLogStream })); //here we add the stre
 
 For us to create an SSL certificate (so we can have HTTPS), we need a certificate.
 
-We can do that by using `openssl`, using the following comand: `openssl req -nodes -new -x509 -keyout server.key -out server.cert`
+We can do that by using `openssl`, using the following command: `openssl req -nodes -new -x509 -keyout server.key -out server.cert`
 We have to answer some questions, one of them `Common Name` must be `localhost`. If we don't do this, it won't work for our local development.
 
-If we wanted to have this working on a hosting server in the net, we would need to have it like our DNS (https://silverx21.com, for example).
+If we wanted to have this working on a hosting server in the net, we would need to have it like our DNS (<https://silverx21.com>, for example).
 
 The server.key will need to stay in our server and the server.cert is what we need to send to our client
 

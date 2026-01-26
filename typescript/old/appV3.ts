@@ -3,8 +3,8 @@ const num2Element = document.getElementById("num2") as HTMLInputElement;
 const buttonElement = document.querySelector("button")!;
 
 //here we define the types of the arrays like this:
-const numResults: number[] = []; //We can also define it as Array<number>
-const textResults: string[] = []; //We can also define it as Array<string>
+const numResults: number[] = [];
+const textResults: string[] = [];
 
 //we can have type aliases like this:
 type NumOrString = number | string;
@@ -48,14 +48,4 @@ buttonElement.addEventListener("click", () => {
   console.log("Array of numbers: ", numResults);
   console.log("Array of strings: ", textResults)
   printResult({val: result as number, timestamp: new Date()});
-});
-
-const myPromise = new Promise<string>((resolve, reject) => {
-  setTimeout(() => {
-    resolve("It worked!");
-  }, 1000);
-});
-
-myPromise.then(result => {
-  console.log(result);
 });
