@@ -35,3 +35,4 @@
 /node-ts/*.d.ts.map
 /node-ts/*.js.map
 /node-ts/*.js
+/node-ts/dist/*

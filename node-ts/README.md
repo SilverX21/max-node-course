@@ -32,3 +32,9 @@ Let's tens follow these steps:
 
 - **Prettier setup**: let's install prettier so we can have formatting enabled in our app: `npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier eslint-plugin-prettier eslint-config-prettier`
 - **ESLint setup**: now let's install `ESLint` like this: `npm init @eslint/config@latest`
+- **Output & Work directory**: let's define our output and working directories
+  For that, we need to go to our tsconfig.json and enable our outDir (usually is the **dist**) and rootDir (usually **src**)
+  ```json
+  "rootDir": "./src", //this is our working directory
+  "outDir": "./dist", //this will be the folder where our compiled js files will be placed
+  ```

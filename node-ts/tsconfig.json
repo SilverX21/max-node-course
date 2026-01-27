@@ -2,8 +2,8 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
+    "rootDir": "./src", //this is our working directory
+    "outDir": "./dist", //this will be the folder where our compiled js files will be placed
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -38,6 +38,6 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   }
 }
